@@ -3,12 +3,13 @@ using CommunityToolkit.Mvvm.Input;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
 using PaperTrail.Core.Repositories;
-using PaperTrail.Core.Services;
 using PaperTrail.App.Services;
 using System.Collections.ObjectModel;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using PaperTrail.App;
 
 namespace PaperTrail.App.ViewModels;
 
@@ -17,7 +18,6 @@ public partial class ContractListViewModel : ObservableObject
     private readonly IContractRepository _contracts;
     private readonly ImportService _import;
     private readonly ExportService _export;
-    private readonly ILicenseService _license;
     private readonly DialogService _dialog;
 
     public ObservableCollection<Contract> Items { get; } = new();
@@ -33,12 +33,11 @@ public partial class ContractListViewModel : ObservableObject
     public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
 
-    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, ILicenseService license, DialogService dialog)
+    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, DialogService dialog)
     {
         _contracts = contracts;
         _import = import;
         _export = export;
-        _license = license;
         _dialog = dialog;
         RefreshCommand = new AsyncRelayCommand(LoadAsync);
         ImportCommand = new AsyncRelayCommand(ImportAsync);
@@ -58,8 +57,12 @@ public partial class ContractListViewModel : ObservableObject
     {
         var contract = new Contract { Id = Guid.NewGuid(), Title = "New Contract" };
         await _contracts.AddAsync(contract);
+        var vm = new ContractEditViewModel { Model = contract };
+        var win = new ContractWindow { DataContext = vm };
+        win.ShowDialog();
+        await _contracts.UpdateAsync(contract);
         await LoadAsync();
-        SelectedContract = contract;
+        SelectedContract = Items.FirstOrDefault(c => c.Id == contract.Id);
     }
 
     private async Task ImportAsync()
@@ -78,12 +81,6 @@ public partial class ContractListViewModel : ObservableObject
 
     private async Task ExportAsync()
     {
-        if (!_license.IsPro)
-        {
-            MessageBox.Show("Export requires a Pro license.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
-
         var data = await _export.ExportAsync(new FilterOptions { Search = Search });
         if (data == null || data.Length == 0)
         {
