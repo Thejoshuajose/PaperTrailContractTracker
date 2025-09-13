@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using PaperTrail.Core.Data;
 using PaperTrail.Core.Models;
 
@@ -11,18 +11,19 @@ namespace PaperTrail.Core.Services;
 /// </summary>
 public class BackupService
 {
-    private readonly AppDbContext _db;
+    private readonly MongoContext _context;
 
-    public BackupService(AppDbContext db) => _db = db;
+    public BackupService(MongoContext context) => _context = context;
 
     public async Task BackupAsync(string filePath, CancellationToken token = default)
     {
         var data = new BackupModel
         {
-            Parties = await _db.Parties.AsNoTracking().ToListAsync(token),
-            Contracts = await _db.Contracts.AsNoTracking().ToListAsync(token),
-            Attachments = await _db.Attachments.AsNoTracking().ToListAsync(token),
-            Reminders = await _db.Reminders.AsNoTracking().ToListAsync(token)
+            Parties = await _context.Parties.Find(_ => true).ToListAsync(token),
+            ImportedContracts = await _context.ImportedContracts.Find(_ => true).ToListAsync(token),
+            PreviousContracts = await _context.PreviousContracts.Find(_ => true).ToListAsync(token),
+            Attachments = await _context.Attachments.Find(_ => true).ToListAsync(token),
+            Reminders = await _context.Reminders.Find(_ => true).ToListAsync(token)
         };
         var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(filePath, json, token);
@@ -38,25 +39,26 @@ public class BackupService
             return;
 
         foreach (var party in data.Parties)
-            _db.Parties.Update(party);
-        foreach (var contract in data.Contracts)
-            _db.Contracts.Update(contract);
+            await _context.Parties.ReplaceOneAsync(p => p.Id == party.Id, party, new ReplaceOptions { IsUpsert = true }, token);
+        foreach (var contract in data.ImportedContracts)
+            await _context.ImportedContracts.ReplaceOneAsync(c => c.Id == contract.Id, contract, new ReplaceOptions { IsUpsert = true }, token);
+        foreach (var contract in data.PreviousContracts)
+            await _context.PreviousContracts.ReplaceOneAsync(c => c.Id == contract.Id, contract, new ReplaceOptions { IsUpsert = true }, token);
         foreach (var attachment in data.Attachments)
         {
             if (!File.Exists(attachment.FilePath))
                 attachment.MissingFile = true;
-            _db.Attachments.Update(attachment);
+            await _context.Attachments.ReplaceOneAsync(a => a.Id == attachment.Id, attachment, new ReplaceOptions { IsUpsert = true }, token);
         }
         foreach (var reminder in data.Reminders)
-            _db.Reminders.Update(reminder);
-
-        await _db.SaveChangesAsync(token);
+            await _context.Reminders.ReplaceOneAsync(r => r.Id == reminder.Id, reminder, new ReplaceOptions { IsUpsert = true }, token);
     }
 
     private class BackupModel
     {
         public List<Party> Parties { get; set; } = new();
-        public List<Contract> Contracts { get; set; } = new();
+        public List<Contract> ImportedContracts { get; set; } = new();
+        public List<Contract> PreviousContracts { get; set; } = new();
         public List<Attachment> Attachments { get; set; } = new();
         public List<Reminder> Reminders { get; set; } = new();
     }
