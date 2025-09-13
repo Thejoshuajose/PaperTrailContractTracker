@@ -32,6 +32,7 @@ public partial class App : Application
                     new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI") ?? "mongodb+srv://fiwbsolutions:lDQlujC1r9yV0uc4@fiwb-cluster.icshfk2.mongodb.net/"));
                 services.AddSingleton<MongoContext>();
                 services.AddScoped<IContractRepository, ContractRepository>();
+                services.AddScoped<PreviousContractRepository>();
                 services.AddScoped<IPartyRepository, PartyRepository>();
                 services.AddSingleton<INotificationService, NotificationService>();
                 services.AddSingleton<ImportService>();
@@ -42,6 +43,7 @@ public partial class App : Application
                 services.AddSingleton<HashService>();
                 services.AddTransient<ReminderEngine>();
                 services.AddSingleton<MainViewModel>();
+                services.AddSingleton<LandingViewModel>();
                 services.AddSingleton<ContractListViewModel>();
                 services.AddSingleton<ContractEditViewModel>();
                 services.AddSingleton<PartyEditViewModel>();
@@ -64,15 +66,14 @@ public partial class App : Application
         await scheduler.Start();
 
         var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
-        var mainVm = scope.ServiceProvider.GetRequiredService<MainViewModel>();
-        await mainVm.Contracts.LoadAsync();
-        var mainWindow = new MainWindow { DataContext = mainVm };
-        mainWindow.Show();
+        var landingVm = scope.ServiceProvider.GetRequiredService<LandingViewModel>();
+        var landingWindow = new LandingWindow { DataContext = landingVm };
+        landingWindow.Show();
 
         if (string.IsNullOrWhiteSpace(settings.CompanyName))
         {
             var settingsVm = new SettingsViewModel(settings);
-            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = mainWindow };
+            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = landingWindow };
             settingsWindow.ShowDialog();
         }
     }

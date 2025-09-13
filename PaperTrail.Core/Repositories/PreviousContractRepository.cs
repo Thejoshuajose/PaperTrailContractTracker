@@ -1,0 +1,82 @@
+using MongoDB.Bson;
+using MongoDB.Driver;
+using PaperTrail.Core.Data;
+using PaperTrail.Core.DTO;
+using PaperTrail.Core.Models;
+
+namespace PaperTrail.Core.Repositories;
+
+/// <summary>
+/// Repository for working with previously created contracts stored in the
+/// <c>PreviousContracts</c> collection.
+/// </summary>
+public class PreviousContractRepository : IContractRepository
+{
+    private readonly MongoContext _context;
+
+    public PreviousContractRepository(MongoContext context) => _context = context;
+
+    public async Task<List<Contract>> GetAllAsync(FilterOptions options, CancellationToken token = default)
+    {
+        var filter = Builders<Contract>.Filter.Empty;
+
+        if (!string.IsNullOrWhiteSpace(options.SearchText))
+        {
+            var regex = new BsonRegularExpression(options.SearchText, "i");
+            filter &= Builders<Contract>.Filter.Or(
+                Builders<Contract>.Filter.Regex(c => c.Title, regex),
+                Builders<Contract>.Filter.Regex(c => c.Tags, regex)
+            );
+        }
+
+        if (options.Statuses != null && options.Statuses.Length > 0)
+            filter &= Builders<Contract>.Filter.In(c => c.Status, options.Statuses);
+
+        if (options.RenewalFrom.HasValue)
+            filter &= Builders<Contract>.Filter.Gte(c => c.RenewalDate, options.RenewalFrom);
+        if (options.RenewalTo.HasValue)
+            filter &= Builders<Contract>.Filter.Lte(c => c.RenewalDate, options.RenewalTo);
+
+        return await _context.PreviousContracts.Find(filter).ToListAsync(token);
+    }
+
+    public async Task<Contract?> GetByIdAsync(Guid id, CancellationToken token = default)
+    {
+        var contract = await _context.PreviousContracts.Find(c => c.Id == id).FirstOrDefaultAsync(token);
+        if (contract != null)
+        {
+            contract.Attachments = await _context.Attachments.Find(a => a.ContractId == id).ToListAsync(token);
+            contract.Reminders = await _context.Reminders.Find(r => r.ContractId == id).ToListAsync(token);
+        }
+        return contract;
+    }
+
+    public Task AddAsync(Contract contract, CancellationToken token = default)
+        => _context.PreviousContracts.InsertOneAsync(contract, cancellationToken: token);
+
+    public Task UpdateAsync(Contract contract, CancellationToken token = default)
+        => _context.PreviousContracts.ReplaceOneAsync(c => c.Id == contract.Id, contract, cancellationToken: token);
+
+    public Task DeleteAsync(Guid id, CancellationToken token = default)
+        => _context.PreviousContracts.DeleteOneAsync(c => c.Id == id, token);
+
+    public async Task AddAttachmentAsync(Guid contractId, Attachment attachment, CancellationToken token = default)
+    {
+        if (await AttachmentExistsAsync(contractId, attachment.Hash!, token))
+            return;
+        attachment.ContractId = contractId;
+        await _context.Attachments.InsertOneAsync(attachment, cancellationToken: token);
+    }
+
+    public Task<bool> AttachmentExistsAsync(Guid contractId, string hash, CancellationToken token = default)
+        => _context.Attachments.Find(a => a.ContractId == contractId && a.Hash == hash).AnyAsync(token);
+
+    public async Task AddRemindersAsync(Guid contractId, IEnumerable<Reminder> reminders, CancellationToken token = default)
+    {
+        foreach (var r in reminders)
+            r.ContractId = contractId;
+        if (reminders.Any())
+            await _context.Reminders.InsertManyAsync(reminders, cancellationToken: token);
+    }
+}
+
