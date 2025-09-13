@@ -6,15 +6,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToolBar>
-            <Button Content="New Contract" Command="{Binding RefreshCommand}" />
+        <Menu>
+            <MenuItem Header="_File">
+                <MenuItem Header="_Settings" Command="{Binding OpenSettingsCommand}" />
+            </MenuItem>
+        </Menu>
+        <ToolBar Grid.Row="1" DataContext="{Binding Contracts}">
+            <Button Content="New Contract" Command="{Binding NewCommand}" />
             <Button Content="Import PDF" Command="{Binding ImportCommand}" />
             <Button Content="Export CSV" Command="{Binding ExportCommand}" />
             <TextBox Width="200" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Search" Command="{Binding RefreshCommand}" />
         </ToolBar>
-        <views:ContractListView Grid.Row="1" DataContext="{Binding Contracts}" />
+        <views:ContractListView Grid.Row="2" DataContext="{Binding Contracts}" />
     </Grid>
 </Window>
