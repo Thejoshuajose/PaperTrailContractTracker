@@ -4,8 +4,10 @@ using PaperTrail.App.Services;
 using PaperTrail.Core.Models;
 using PaperTrail.Core.Repositories;
 using PaperTrail.Core.Services;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace PaperTrail.App.ViewModels;
@@ -89,6 +91,43 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         tags.CollectionChanged += (_, __) => HasChanges = true;
         attachments.CollectionChanged += (_, __) => HasChanges = true;
         reminders.CollectionChanged += (_, __) => HasChanges = true;
+    }
+
+    public void LoadFromModel(Contract model)
+    {
+        Id = model.Id;
+        Title = model.Title;
+        Parties.Clear();
+        if (model.Counterparty != null)
+        {
+            Parties.Add(model.Counterparty);
+            SelectedParty = model.Counterparty;
+        }
+        SelectedStatus = model.Status;
+        EffectiveDate = model.EffectiveDate;
+        RenewalDate = model.RenewalDate;
+        TerminationDate = model.TerminationDate;
+        RenewalTermMonths = model.RenewalTermMonths;
+        NoticePeriodDays = model.NoticePeriodDays;
+        ValueAmount = model.ValueAmount;
+
+        Tags.Clear();
+        foreach (var t in (model.Tags ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            Tags.Add(t);
+
+        Attachments.Clear();
+        if (model.Attachments != null)
+            foreach (var a in model.Attachments)
+                Attachments.Add(a);
+
+        Reminders.Clear();
+        if (model.Reminders != null)
+            foreach (var r in model.Reminders)
+                Reminders.Add(r);
+
+        Notes = model.Notes;
+        RecalculateComputedDates();
+        HasChanges = false;
     }
 
     private bool CanSave() => !HasErrors;
