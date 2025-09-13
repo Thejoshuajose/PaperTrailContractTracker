@@ -28,7 +28,7 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
-                services.AddDbContext<AppDbContext>();
+                services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("PaperTrail"));
                 services.AddScoped<IContractRepository, ContractRepository>();
                 services.AddScoped<IPartyRepository, PartyRepository>();
                 services.AddSingleton<INotificationService, NotificationService>();
@@ -43,6 +43,7 @@ public partial class App : Application
                 services.AddSingleton<ContractListViewModel>();
                 services.AddSingleton<ContractEditViewModel>();
                 services.AddSingleton<PartyEditViewModel>();
+                services.AddSingleton<SettingsService>();
                 services.AddSingleton<IJobFactory, QuartzJobFactory>();
                 services.AddSingleton(provider =>
                 {
@@ -55,8 +56,15 @@ public partial class App : Application
 
         using var scope = _host.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.Migrate();
         await DataSeeder.SeedAsync(db);
+
+        var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
+        if (string.IsNullOrWhiteSpace(settings.CompanyName))
+        {
+            var settingsVm = new SettingsViewModel(settings);
+            var settingsWindow = new SettingsWindow { DataContext = settingsVm };
+            settingsWindow.ShowDialog();
+        }
 
         var scheduler = scope.ServiceProvider.GetRequiredService<IScheduler>();
         var job = JobBuilder.Create<ReminderEngine>().WithIdentity("reminderJob").Build();
