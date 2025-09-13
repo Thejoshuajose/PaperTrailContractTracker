@@ -1,5 +1,6 @@
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Repositories;
+using PaperTrail.Core.Services;
 
 namespace PaperTrail.App.Services;
 
