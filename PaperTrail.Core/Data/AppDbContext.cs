@@ -34,7 +34,9 @@ public class AppDbContext : DbContext
             d => d.ToDateTime(TimeOnly.MinValue),
             d => DateOnly.FromDateTime(d));
 
-        configurationBuilder.Properties<DateOnly>().HaveConversion(converter);
+        configurationBuilder
+            .Properties<DateOnly>()
+            .HaveConversion(converter);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
