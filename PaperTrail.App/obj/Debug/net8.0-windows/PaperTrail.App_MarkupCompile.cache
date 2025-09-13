@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\App.xaml
 72144277309
 
-18283968478
-26765575392
+26-247803063
+534131150784
 LandingWindow.xaml;MainWindow.xaml;Resources\Styles.xaml;SettingsWindow.xaml;Views\ContractEditView.xaml;Views\ContractListView.xaml;Views\PartyEditView.xaml;
 
-False
+True
 
