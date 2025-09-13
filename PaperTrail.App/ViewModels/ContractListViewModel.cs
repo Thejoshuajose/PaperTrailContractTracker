@@ -8,6 +8,7 @@ using PaperTrail.App.Services;
 using System.Collections.ObjectModel;
 using System;
 using System.IO;
+using System.Windows;
 
 namespace PaperTrail.App.ViewModels;
 
@@ -27,9 +28,9 @@ public partial class ContractListViewModel : ObservableObject
     [ObservableProperty]
     private string? search;
 
-    public IRelayCommand NewCommand { get; }
-    public IRelayCommand RefreshCommand { get; }
-    public IRelayCommand ImportCommand { get; }
+    public IAsyncRelayCommand NewCommand { get; }
+    public IAsyncRelayCommand RefreshCommand { get; }
+    public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
 
     public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, ILicenseService license, DialogService dialog)
@@ -39,10 +40,10 @@ public partial class ContractListViewModel : ObservableObject
         _export = export;
         _license = license;
         _dialog = dialog;
-        RefreshCommand = new RelayCommand(async () => await LoadAsync());
-        ImportCommand = new RelayCommand(async () => await ImportAsync());
+        RefreshCommand = new AsyncRelayCommand(LoadAsync);
+        ImportCommand = new AsyncRelayCommand(ImportAsync);
         ExportCommand = new AsyncRelayCommand(ExportAsync);
-        NewCommand = new RelayCommand(async () => await NewAsync());
+        NewCommand = new AsyncRelayCommand(NewAsync);
     }
 
     public async Task LoadAsync()
@@ -58,23 +59,41 @@ public partial class ContractListViewModel : ObservableObject
         var contract = new Contract { Id = Guid.NewGuid(), Title = "New Contract" };
         await _contracts.AddAsync(contract);
         await LoadAsync();
+        SelectedContract = contract;
     }
 
     private async Task ImportAsync()
     {
-        if (SelectedContract == null) return;
+        if (SelectedContract == null)
+        {
+            MessageBox.Show("Please select a contract first.", "Import", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         var file = _dialog.OpenFile("PDF Files|*.pdf");
         if (file == null) return;
         await _import.ImportAsync(SelectedContract.Id, file);
+        MessageBox.Show("Import completed.", "Import", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private async Task ExportAsync()
     {
-        if (!_license.IsPro) return;
+        if (!_license.IsPro)
+        {
+            MessageBox.Show("Export requires a Pro license.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         var data = await _export.ExportAsync(new FilterOptions { Search = Search });
-        if (data == null) return;
+        if (data == null || data.Length == 0)
+        {
+            MessageBox.Show("No data to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         var file = _dialog.SaveFile("CSV Files|*.csv", ".csv");
         if (file == null) return;
         File.WriteAllBytes(file, data);
+        MessageBox.Show("Export completed.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 }
