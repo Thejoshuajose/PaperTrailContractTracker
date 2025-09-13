@@ -12,4 +12,5 @@ public class Attachment
     public string FilePath { get; set; } = string.Empty;
     public string? Hash { get; set; }
     public DateTime CreatedUtc { get; set; }
+    public bool? MissingFile { get; set; }
 }

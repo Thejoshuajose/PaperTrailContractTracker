@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 using PaperTrail.Core.Data;
+using Microsoft.Extensions.Logging;
 
 namespace PaperTrail.Core.Services;
 
@@ -8,11 +9,13 @@ public class ReminderEngine : IJob
 {
     private readonly IDbContextFactory<AppDbContext> _dbFactory;
     private readonly INotificationService _notification;
+    private readonly ILogger<ReminderEngine> _logger;
 
-    public ReminderEngine(IDbContextFactory<AppDbContext> dbFactory, INotificationService notification)
+    public ReminderEngine(IDbContextFactory<AppDbContext> dbFactory, INotificationService notification, ILogger<ReminderEngine> logger)
     {
         _dbFactory = dbFactory;
         _notification = notification;
+        _logger = logger;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -21,6 +24,8 @@ public class ReminderEngine : IJob
         var due = await db.Reminders.Include(r => r.Contract)
             .Where(r => r.CompletedUtc == null && r.DueUtc <= DateTime.UtcNow)
             .ToListAsync();
+
+        _logger.LogInformation("Processing {Count} reminders", due.Count);
 
         foreach (var reminder in due)
         {
