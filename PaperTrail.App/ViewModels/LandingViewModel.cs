@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 using PaperTrail.App.Services;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
@@ -31,7 +30,12 @@ public class LandingViewModel : ObservableObject
     [ObservableProperty]
     private Contract? selectedImportedContract;
 
-    public IAsyncRelayCommand<Window> OpenMainCommand { get; }
+    public MainViewModel Main => _mainViewModel;
+
+    [ObservableProperty]
+    private bool isMainViewVisible;
+
+    public IAsyncRelayCommand OpenMainCommand { get; }
     public IRelayCommand OpenSettingsCommand { get; }
 
     public LandingViewModel(MainViewModel mainViewModel,
@@ -49,16 +53,14 @@ public class LandingViewModel : ObservableObject
         _importService = importService;
         _dialogService = dialogService;
         _licenseService = licenseService;
-        OpenMainCommand = new AsyncRelayCommand<Window>(OpenMainAsync);
+        OpenMainCommand = new AsyncRelayCommand(OpenMainAsync);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
     }
 
-    private async Task OpenMainAsync(Window? window)
+    private async Task OpenMainAsync()
     {
         await _mainViewModel.Contracts.LoadAsync();
-        var main = new MainWindow { DataContext = _mainViewModel };
-        main.Show();
-        window?.Close();
+        IsMainViewVisible = true;
     }
 
     private void OpenSettings()
