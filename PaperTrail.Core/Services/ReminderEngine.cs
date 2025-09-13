@@ -6,18 +6,19 @@ namespace PaperTrail.Core.Services;
 
 public class ReminderEngine : IJob
 {
-    private readonly AppDbContext _db;
+    private readonly IDbContextFactory<AppDbContext> _dbFactory;
     private readonly INotificationService _notification;
 
-    public ReminderEngine(AppDbContext db, INotificationService notification)
+    public ReminderEngine(IDbContextFactory<AppDbContext> dbFactory, INotificationService notification)
     {
-        _db = db;
+        _dbFactory = dbFactory;
         _notification = notification;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var due = await _db.Reminders.Include(r => r.Contract)
+        await using var db = _dbFactory.CreateDbContext();
+        var due = await db.Reminders.Include(r => r.Contract)
             .Where(r => r.CompletedUtc == null && r.DueUtc <= DateTime.UtcNow)
             .ToListAsync();
 
@@ -28,6 +29,6 @@ public class ReminderEngine : IJob
         }
 
         if (due.Count > 0)
-            await _db.SaveChangesAsync();
+            await db.SaveChangesAsync();
     }
 }

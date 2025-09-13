@@ -29,6 +29,7 @@ public partial class App : Application
             .ConfigureServices(services =>
             {
                 services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("PaperTrail"));
+                services.AddDbContextFactory<AppDbContext>(options => options.UseInMemoryDatabase("PaperTrail"));
                 services.AddScoped<IContractRepository, ContractRepository>();
                 services.AddScoped<IPartyRepository, PartyRepository>();
                 services.AddSingleton<INotificationService, NotificationService>();
@@ -44,6 +45,7 @@ public partial class App : Application
                 services.AddSingleton<ContractEditViewModel>();
                 services.AddSingleton<PartyEditViewModel>();
                 services.AddSingleton<SettingsService>();
+                services.AddSingleton<LandingViewModel>();
                 services.AddSingleton<IJobFactory, QuartzJobFactory>();
                 services.AddSingleton(provider =>
                 {
@@ -58,26 +60,22 @@ public partial class App : Application
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await DataSeeder.SeedAsync(db);
 
-        var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
-        if (string.IsNullOrWhiteSpace(settings.CompanyName))
-        {
-            var settingsVm = new SettingsViewModel(settings);
-            var settingsWindow = new SettingsWindow { DataContext = settingsVm };
-            settingsWindow.ShowDialog();
-        }
-
         var scheduler = scope.ServiceProvider.GetRequiredService<IScheduler>();
         var job = JobBuilder.Create<ReminderEngine>().WithIdentity("reminderJob").Build();
         var trigger = TriggerBuilder.Create().StartNow().WithSimpleSchedule(s => s.WithInterval(TimeSpan.FromMinutes(15)).RepeatForever()).Build();
         await scheduler.ScheduleJob(job, trigger);
         await scheduler.Start();
 
-        var vm = scope.ServiceProvider.GetRequiredService<MainViewModel>();
-        await vm.Contracts.LoadAsync();
-        var mainWindow = new MainWindow
+        var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
+        var landingVm = scope.ServiceProvider.GetRequiredService<LandingViewModel>();
+        var landingWindow = new LandingWindow { DataContext = landingVm };
+        landingWindow.Show();
+
+        if (string.IsNullOrWhiteSpace(settings.CompanyName))
         {
-            DataContext = vm
-        };
-        mainWindow.Show();
+            var settingsVm = new SettingsViewModel(settings);
+            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = landingWindow };
+            settingsWindow.ShowDialog();
+        }
     }
 }
