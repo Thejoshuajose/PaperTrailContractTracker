@@ -13,10 +13,13 @@ public class Contract
     public ContractStatus Status { get; set; } = ContractStatus.Active;
     public DateOnly? EffectiveDate { get; set; }
     public DateOnly? RenewalDate { get; set; }
+    [Range(1, 600)]
     public int? RenewalTermMonths { get; set; }
     public DateOnly? TerminationDate { get; set; }
+    [Range(0, 3650)]
     public int? NoticePeriodDays { get; set; }
     public string? Tags { get; set; }
+    [Range(0, 999999999)]
     public decimal? ValueAmount { get; set; }
     public string? Notes { get; set; }
     public bool SensitiveFieldsEncrypted { get; set; }

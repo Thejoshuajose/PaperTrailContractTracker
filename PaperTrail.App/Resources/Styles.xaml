@@ -4,4 +4,66 @@
         <Setter Property="Margin" Value="2" />
         <Setter Property="Padding" Value="6,2" />
     </Style>
+
+    <!-- Badge style for ContractStatus -->
+    <Style x:Key="StatusBadgeStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="Background" Value="LightGray" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding}" Value="Active">
+                <Setter Property="Background" Value="LightGreen" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="ExpiringSoon">
+                <Setter Property="Background" Value="Orange" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="Terminated">
+                <Setter Property="Background" Value="LightCoral" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Validation styles -->
+    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderBrush="Red" BorderThickness="1">
+                        <AdornedElementPlaceholder />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderBrush="Red" BorderThickness="1">
+                        <AdornedElementPlaceholder />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Tag chip style -->
+    <Style x:Key="TagChipStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="#EEE" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="Child" Value="{Binding}" />
+    </Style>
 </ResourceDictionary>

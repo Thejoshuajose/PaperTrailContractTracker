@@ -8,4 +8,12 @@ public partial class ContractWindow : Window
     {
         InitializeComponent();
     }
+
+    private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (DataContext is ViewModels.ContractEditViewModel vm)
+        {
+            e.Cancel = !vm.ConfirmClose();
+        }
+    }
 }
