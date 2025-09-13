@@ -28,16 +28,16 @@ build_property.UnoDisableHotRestartHelperGeneration =
 build_property.RuntimeIdentifier = 
 build_property.UnoRuntimeIdentifier = 
 build_property.UnoHotReloadMode = 
-build_property.SolutionFileName = PaperTrail.sln
+build_property.SolutionFileName = *Undefined*
 build_property.LangName = 
 build_property.LangID = 
-build_property.SolutionDir = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\
-build_property.SolutionExt = .sln
+build_property.SolutionDir = *Undefined*
+build_property.SolutionExt = *Undefined*
 build_property.UseHostCompilerIfAvailable = true
 build_property.DefineExplicitDefaults = 
 build_property.Platform = AnyCPU
-build_property.SolutionPath = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.sln
-build_property.SolutionName = PaperTrail
+build_property.SolutionPath = *Undefined*
+build_property.SolutionName = *Undefined*
 build_property.VSIDEResolvedNonMSBuildProjectOutputs = 
 build_property.DevEnvDir = *Undefined*
 build_property.MSBuildVersion = 17.14.19
@@ -83,6 +83,14 @@ build_property.CsWinRTUseWindowsUIXamlProjections = false
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/LandingWindow.xaml]
+build_metadata.AdditionalFiles.SourceItemGroup = Page
+build_metadata.AdditionalFiles.Link = 
+build_metadata.AdditionalFiles.TargetPath = 
+build_metadata.AdditionalFiles.FullPath = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\LandingWindow.xaml
+build_metadata.AdditionalFiles.Identity = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\LandingWindow.xaml
+build_metadata.AdditionalFiles.XamlRuntime = Wpf
+
 [C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/MainWindow.xaml]
 build_metadata.AdditionalFiles.SourceItemGroup = Page
 build_metadata.AdditionalFiles.Link = 
@@ -97,6 +105,14 @@ build_metadata.AdditionalFiles.Link =
 build_metadata.AdditionalFiles.TargetPath = 
 build_metadata.AdditionalFiles.FullPath = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\Resources\Styles.xaml
 build_metadata.AdditionalFiles.Identity = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\Resources\Styles.xaml
+build_metadata.AdditionalFiles.XamlRuntime = Wpf
+
+[C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/SettingsWindow.xaml]
+build_metadata.AdditionalFiles.SourceItemGroup = Page
+build_metadata.AdditionalFiles.Link = 
+build_metadata.AdditionalFiles.TargetPath = 
+build_metadata.AdditionalFiles.FullPath = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\SettingsWindow.xaml
+build_metadata.AdditionalFiles.Identity = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\SettingsWindow.xaml
 build_metadata.AdditionalFiles.XamlRuntime = Wpf
 
 [C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/Views/ContractEditView.xaml]
