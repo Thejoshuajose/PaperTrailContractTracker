@@ -5,16 +5,9 @@
         Title="{Binding Title, StringFormat=Edit Contract -- {0}}" Height="600" Width="800"
         Closing="Window_Closing">
     <Window.InputBindings>
-        <KeyBinding Key="S"
-                    Modifiers="Control"
-                    Command="{Binding DataContext.SaveCommand,
-                                      RelativeSource={RelativeSource AncestorType=Window}}" />
-        <KeyBinding Key="Escape"
-                    Command="{Binding DataContext.CancelCommand,
-                                      RelativeSource={RelativeSource AncestorType=Window}}" />
-        <KeyBinding Key="Delete"
-                    Command="{Binding DataContext.DeleteCommand,
-                                      RelativeSource={RelativeSource AncestorType=Window}}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+        <KeyBinding Key="Escape" Command="{Binding CancelCommand}" />
+        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" />
     </Window.InputBindings>
     <views:ContractEditView />
 </Window>
