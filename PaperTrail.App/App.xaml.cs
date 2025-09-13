@@ -17,6 +17,7 @@ namespace PaperTrail.App;
 public partial class App : Application
 {
     private IHost? _host;
+    public IServiceProvider Services => _host?.Services ?? throw new InvalidOperationException("Host not initialized");
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -41,6 +42,7 @@ public partial class App : Application
                 services.AddSingleton<HashService>();
                 services.AddTransient<ReminderEngine>();
                 services.AddSingleton<MainViewModel>();
+                services.AddSingleton<LandingViewModel>();
                 services.AddSingleton<ContractListViewModel>();
                 services.AddSingleton<ContractEditViewModel>();
                 services.AddSingleton<PartyEditViewModel>();
@@ -65,17 +67,7 @@ public partial class App : Application
         await scheduler.ScheduleJob(job, trigger);
         await scheduler.Start();
 
-        var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
-        var mainVm = scope.ServiceProvider.GetRequiredService<MainViewModel>();
-        await mainVm.Contracts.LoadAsync();
-        var mainWindow = new MainWindow { DataContext = mainVm };
-        mainWindow.Show();
-
-        if (string.IsNullOrWhiteSpace(settings.CompanyName))
-        {
-            var settingsVm = new SettingsViewModel(settings);
-            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = mainWindow };
-            settingsWindow.ShowDialog();
-        }
+        var landingWindow = new LandingWindow();
+        landingWindow.Show();
     }
 }
