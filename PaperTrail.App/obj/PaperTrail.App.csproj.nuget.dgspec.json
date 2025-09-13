@@ -78,6 +78,10 @@
             "Quartz": {
               "target": "Package",
               "version": "[3.15.0, )"
+            },
+            "Uno.UI": {
+              "target": "Package",
+              "version": "[5.6.99, )"
             }
           },
           "imports": [
