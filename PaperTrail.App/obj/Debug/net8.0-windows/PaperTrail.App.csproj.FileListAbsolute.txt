@@ -122,3 +122,5 @@ C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.A
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\SettingsWindow.g.cs
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\LandingWindow.baml
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\LandingWindow.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\ContractWindow.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\ContractWindow.baml
