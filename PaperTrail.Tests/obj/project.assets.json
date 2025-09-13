@@ -2091,6 +2091,7 @@
         "dependencies": {
           "CsvHelper": "30.0.1",
           "Microsoft.EntityFrameworkCore": "8.0.0",
+          "Microsoft.EntityFrameworkCore.InMemory": "8.0.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "8.0.0",
           "Quartz": "3.8.1"
         },
