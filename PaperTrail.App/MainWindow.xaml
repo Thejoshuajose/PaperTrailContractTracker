@@ -14,6 +14,7 @@
             <Button Content="Export CSV" Command="{Binding ExportCommand}" />
             <TextBox Width="200" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Search" Command="{Binding RefreshCommand}" />
+            <Button Content="Settings" Command="{Binding OpenSettingsCommand}" />
         </ToolBar>
         <views:ContractListView Grid.Row="1" DataContext="{Binding Contracts}" />
     </Grid>
