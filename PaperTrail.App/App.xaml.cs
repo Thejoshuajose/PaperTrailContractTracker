@@ -29,7 +29,7 @@ public partial class App : Application
             .ConfigureServices(services =>
             {
                 services.AddSingleton<IMongoClient>(_ =>
-                    new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI") ?? "mongodb://localhost:27017"));
+                    new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI") ?? "mongodb+srv://fiwbsolutions:lDQlujC1r9yV0uc4@fiwb-cluster.icshfk2.mongodb.net/"));
                 services.AddSingleton<MongoContext>();
                 services.AddScoped<IContractRepository, ContractRepository>();
                 services.AddScoped<IPartyRepository, PartyRepository>();

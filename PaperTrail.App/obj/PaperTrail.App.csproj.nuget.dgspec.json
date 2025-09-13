@@ -158,23 +158,9 @@
               "target": "Package",
               "version": "[30.0.1, )"
             },
-            "Microsoft.EntityFrameworkCore": {
+            "MongoDB.Driver": {
               "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.InMemory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
-              "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[2.19.1, )"
             },
             "Quartz": {
               "target": "Package",
