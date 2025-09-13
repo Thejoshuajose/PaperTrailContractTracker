@@ -6,8 +6,14 @@
              AllowDrop="True">
     <UserControl.Resources>
         <conv:EnumToItemsSourceConverter x:Key="EnumConv" />
+        <conv:DateOnlyToDateTimeConverter x:Key="DateOnlyConv" />
     </UserControl.Resources>
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <!-- Command Bar -->
         <DockPanel Margin="4" LastChildFill="False">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
@@ -43,7 +49,9 @@
                                 <Border Style="{StaticResource TagChipStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding}"/>
-                                        <Button Content="✕" Command="{Binding DataContext.RemoveTagCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"/>
+                                        <Button Content="✕"
+                                                Command="{Binding DataContext.RemoveTagCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
@@ -54,17 +62,30 @@
 
             <!-- Dates Tab -->
             <TabItem Header="Dates">
-                <Grid Margin="10" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <TextBlock Text="Effective" Grid.Row="0"/>
-                    <DatePicker SelectedDate="{Binding EffectiveDate}" Grid.Column="1"/>
+                    <DatePicker SelectedDate="{Binding EffectiveDate, Converter={StaticResource DateOnlyConv}}" Grid.Column="1"/>
                     <TextBlock Text="Renewal" Grid.Row="1"/>
-                    <DatePicker SelectedDate="{Binding RenewalDate}" Grid.Row="1" Grid.Column="1"/>
+                    <DatePicker SelectedDate="{Binding RenewalDate, Converter={StaticResource DateOnlyConv}}" Grid.Row="1" Grid.Column="1"/>
                     <TextBlock Text="Renewal Term (months)" Grid.Row="2"/>
                     <TextBox Text="{Binding RenewalTermMonths}" Grid.Row="2" Grid.Column="1"/>
                     <TextBlock Text="Notice Period (days)" Grid.Row="3"/>
                     <TextBox Text="{Binding NoticePeriodDays}" Grid.Row="3" Grid.Column="1"/>
                     <TextBlock Text="Termination" Grid.Row="4"/>
-                    <DatePicker SelectedDate="{Binding TerminationDate}" Grid.Row="4" Grid.Column="1"/>
+                    <DatePicker SelectedDate="{Binding TerminationDate, Converter={StaticResource DateOnlyConv}}" Grid.Row="4" Grid.Column="1"/>
                     <TextBlock Text="Next Renewal" Grid.Row="5"/>
                     <TextBox Text="{Binding ComputedNextRenewal}" Grid.Row="5" Grid.Column="1" IsReadOnly="True"/>
                     <TextBlock Text="Notice Date" Grid.Row="6"/>
