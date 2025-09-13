@@ -13,7 +13,7 @@
         <TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" />
         <Button Content="Save"
                 Command="{Binding SaveCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                 HorizontalAlignment="Right" Margin="0,10,0,0" />
     </StackPanel>
 </Window>
