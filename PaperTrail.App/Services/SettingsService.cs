@@ -12,6 +12,9 @@ public class SettingsService
     private class SettingsData
     {
         public string? CompanyName { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? Address { get; set; }
     }
 
     public SettingsService()
@@ -34,6 +37,24 @@ public class SettingsService
     {
         get => _data.CompanyName;
         set => _data.CompanyName = value;
+    }
+
+    public string? ContactEmail
+    {
+        get => _data.ContactEmail;
+        set => _data.ContactEmail = value;
+    }
+
+    public string? ContactPhone
+    {
+        get => _data.ContactPhone;
+        set => _data.ContactPhone = value;
+    }
+
+    public string? Address
+    {
+        get => _data.Address;
+        set => _data.Address = value;
     }
 
     public void Save()
