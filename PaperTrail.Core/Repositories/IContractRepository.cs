@@ -11,5 +11,6 @@ public interface IContractRepository
     Task UpdateAsync(Contract contract, CancellationToken token = default);
     Task DeleteAsync(Guid id, CancellationToken token = default);
     Task AddAttachmentAsync(Guid contractId, Attachment attachment, CancellationToken token = default);
+    Task<bool> AttachmentExistsAsync(Guid contractId, string hash, CancellationToken token = default);
     Task AddRemindersAsync(Guid contractId, IEnumerable<Reminder> reminders, CancellationToken token = default);
 }

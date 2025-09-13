@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PaperTrail.Core.Data;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
+using System.Linq;
 
 namespace PaperTrail.Core.Repositories;
 
@@ -13,13 +14,32 @@ public class ContractRepository : IContractRepository
 
     public async Task<List<Contract>> GetAllAsync(FilterOptions options, CancellationToken token = default)
     {
-        var query = _db.Contracts.AsNoTracking().Include(c => c.Counterparty).AsQueryable();
-        if (!string.IsNullOrWhiteSpace(options.Search))
-            query = query.Where(c => EF.Functions.Like(c.Title, $"%{options.Search}%"));
-        if (options.Status.HasValue)
-            query = query.Where(c => c.Status == options.Status);
-        if (!string.IsNullOrWhiteSpace(options.Tags))
-            query = query.Where(c => c.Tags != null && c.Tags.Contains(options.Tags));
+        var query = _db.Contracts
+            .AsNoTracking()
+            .Include(c => c.Counterparty)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(options.SearchText))
+        {
+            var pattern = $"%{options.SearchText}%";
+            query = query.Where(c =>
+                EF.Functions.Like(c.Title, pattern) ||
+                (c.Counterparty != null && EF.Functions.Like(c.Counterparty.Name, pattern)) ||
+                (c.Tags != null && EF.Functions.Like(c.Tags, pattern)));
+        }
+
+        if (options.Statuses != null && options.Statuses.Length > 0)
+            query = query.Where(c => options.Statuses.Contains(c.Status));
+
+        var tags = options.NormalizeTags().ToArray();
+        if (tags.Length > 0)
+            query = query.Where(c => c.Tags != null && tags.All(t => c.Tags.ToLower().Split(',', ';', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim().ToLowerInvariant()).Contains(t)));
+
+        if (options.RenewalFrom.HasValue)
+            query = query.Where(c => c.RenewalDate >= options.RenewalFrom);
+        if (options.RenewalTo.HasValue)
+            query = query.Where(c => c.RenewalDate <= options.RenewalTo);
+
         return await query.ToListAsync(token);
     }
 
@@ -50,10 +70,15 @@ public class ContractRepository : IContractRepository
 
     public async Task AddAttachmentAsync(Guid contractId, Attachment attachment, CancellationToken token = default)
     {
+        if (await AttachmentExistsAsync(contractId, attachment.Hash!, token))
+            return;
         var contract = await _db.Contracts.Include(c => c.Attachments).FirstAsync(c => c.Id == contractId, token);
         contract.Attachments.Add(attachment);
         await _db.SaveChangesAsync(token);
     }
+
+    public Task<bool> AttachmentExistsAsync(Guid contractId, string hash, CancellationToken token = default)
+        => _db.Attachments.AnyAsync(a => a.ContractId == contractId && a.Hash == hash, token);
 
     public async Task AddRemindersAsync(Guid contractId, IEnumerable<Reminder> reminders, CancellationToken token = default)
     {

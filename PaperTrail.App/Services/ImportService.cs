@@ -20,14 +20,25 @@ public class ImportService
     {
         if (!File.Exists(filePath))
             return null;
+
+        await using var src = File.OpenRead(filePath);
+        var hash = _hash.ComputeHash(src);
+
+        if (await _contracts.AttachmentExistsAsync(contractId, hash, token))
+            return null;
+
+        src.Position = 0;
+
         var baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PaperTrailContractTracker", "files");
         Directory.CreateDirectory(baseDir);
         var fileName = Path.GetFileName(filePath);
         var destName = $"{Guid.NewGuid()}_{fileName}";
         var destPath = Path.Combine(baseDir, destName);
-        File.Copy(filePath, destPath, true);
-        await using var stream = File.OpenRead(destPath);
-        var hash = _hash.ComputeHash(stream);
+        await using (var dest = File.Create(destPath))
+        {
+            await src.CopyToAsync(dest, token);
+        }
+
         var attachment = new Attachment
         {
             Id = Guid.NewGuid(),

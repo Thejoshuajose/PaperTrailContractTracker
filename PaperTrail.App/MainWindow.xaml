@@ -18,7 +18,7 @@
             <Button Content="New Contract" Command="{Binding NewCommand}" />
             <Button Content="Import PDF" Command="{Binding ImportCommand}" />
             <Button Content="Export CSV" Command="{Binding ExportCommand}" />
-            <TextBox Width="200" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Width="200" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Search" Command="{Binding RefreshCommand}" />
         </ToolBar>
         <views:ContractListView Grid.Row="2" DataContext="{Binding Contracts}" />

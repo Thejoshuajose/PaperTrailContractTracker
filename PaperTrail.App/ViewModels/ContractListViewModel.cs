@@ -26,7 +26,7 @@ public partial class ContractListViewModel : ObservableObject
     private Contract? selectedContract;
 
     [ObservableProperty]
-    private string? search;
+    private string? searchText;
 
     public IAsyncRelayCommand NewCommand { get; }
     public IAsyncRelayCommand RefreshCommand { get; }
@@ -48,7 +48,7 @@ public partial class ContractListViewModel : ObservableObject
     public async Task LoadAsync()
     {
         Items.Clear();
-        var list = await _contracts.GetAllAsync(new FilterOptions { Search = Search });
+        var list = await _contracts.GetAllAsync(new FilterOptions { SearchText = SearchText });
         foreach (var c in list)
             Items.Add(c);
     }
@@ -81,7 +81,7 @@ public partial class ContractListViewModel : ObservableObject
 
     private async Task ExportAsync()
     {
-        var data = await _export.ExportAsync(new FilterOptions { Search = Search });
+        var data = await _export.ExportAsync(new FilterOptions { SearchText = SearchText });
         if (data == null || data.Length == 0)
         {
             MessageBox.Show("No data to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);

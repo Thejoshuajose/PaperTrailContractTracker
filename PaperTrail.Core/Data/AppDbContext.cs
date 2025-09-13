@@ -28,25 +28,34 @@ public class AppDbContext : DbContext
         }
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
+        var converter = new ValueConverter<DateOnly, DateTime>(
             d => d.ToDateTime(TimeOnly.MinValue),
             d => DateOnly.FromDateTime(d));
 
+        configurationBuilder.Properties<DateOnly>().HaveConversion(converter);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Contract>(entity =>
         {
-            entity.Property(e => e.EffectiveDate).HasConversion(dateOnlyConverter);
-            entity.Property(e => e.RenewalDate).HasConversion(dateOnlyConverter);
-            entity.Property(e => e.TerminationDate).HasConversion(dateOnlyConverter);
             entity.HasMany(e => e.Attachments).WithOne(a => a.Contract).HasForeignKey(a => a.ContractId);
             entity.HasMany(e => e.Reminders).WithOne(r => r.Contract).HasForeignKey(r => r.ContractId);
+            entity.HasIndex(e => e.Status).HasDatabaseName("IX_Contracts_Status");
+            entity.HasIndex(e => e.RenewalDate).HasDatabaseName("IX_Contracts_RenewalDate");
         });
 
         modelBuilder.Entity<Party>()
             .HasMany(p => p.Contracts)
             .WithOne(c => c.Counterparty)
             .HasForeignKey(c => c.CounterpartyId);
+
+        modelBuilder.Entity<Attachment>(entity =>
+        {
+            entity.HasIndex(a => new { a.ContractId, a.Hash }).IsUnique();
+        });
 
         base.OnModelCreating(modelBuilder);
     }
