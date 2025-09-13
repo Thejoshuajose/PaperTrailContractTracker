@@ -58,7 +58,12 @@ public partial class ContractListViewModel : ObservableObject
 
     private async Task NewAsync()
     {
-        var contract = new Contract { Id = Guid.NewGuid(), Title = "New Contract" };
+        var selector = new NewContractWindow();
+        if (selector.ShowDialog() != true)
+            return;
+
+        var title = string.IsNullOrWhiteSpace(selector.SelectedTitle) ? "New Contract" : selector.SelectedTitle;
+        var contract = new Contract { Id = Guid.NewGuid(), Title = title };
         await _contracts.AddAsync(contract);
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
         vm.LoadFromModel(contract);
@@ -80,6 +85,15 @@ public partial class ContractListViewModel : ObservableObject
         if (file == null) return;
         await _import.ImportAsync(SelectedContract.Id, file);
         MessageBox.Show("Import completed.", "Import", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        var model = await _contracts.GetByIdAsync(SelectedContract.Id);
+        if (model != null)
+        {
+            var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
+            vm.LoadFromModel(model);
+            var win = new ContractWindow { DataContext = vm };
+            win.ShowDialog();
+        }
     }
 
     private async Task ExportAsync()
