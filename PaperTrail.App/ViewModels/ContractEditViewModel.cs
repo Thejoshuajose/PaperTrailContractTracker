@@ -7,10 +7,12 @@ using PaperTrail.Core.Services;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.ComponentModel;
 
 namespace PaperTrail.App.ViewModels;
 
 public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorInfo
+
 {
     private readonly IContractRepository _repository;
     private readonly ImportService _importService;
@@ -113,24 +115,24 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     public void RecalculateComputedDates()
     {
         DateOnly? next = null;
-        if (renewalDate.HasValue)
+        if (RenewalDate.HasValue)
         {
-            next = renewalDate;
+            next = RenewalDate;
         }
-        else if (effectiveDate.HasValue && renewalTermMonths.HasValue)
+        else if (EffectiveDate.HasValue && RenewalTermMonths.HasValue)
         {
             try
             {
-                next = effectiveDate.Value.AddMonths(renewalTermMonths.Value);
+                next = EffectiveDate.Value.AddMonths(RenewalTermMonths.Value);
             }
             catch { }
         }
         ComputedNextRenewal = next;
-        if (next.HasValue && noticePeriodDays.HasValue)
+        if (next.HasValue && NoticePeriodDays.HasValue)
         {
             try
             {
-                ComputedNoticeDate = next.Value.AddDays(-noticePeriodDays.Value);
+                ComputedNoticeDate = next.Value.AddDays(-NoticePeriodDays.Value);
             }
             catch { ComputedNoticeDate = null; }
         }
@@ -332,7 +334,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     private async Task ImportFileAsync(string path)
     {
-        var attachment = await _importService.ImportAsync(path);
+        var attachment = await _importService.ImportAsync(Id, path);
         if (Attachments.Any(a => a.Hash == attachment.Hash))
         {
             MessageBox.Show("Duplicate attachment", "Info");
