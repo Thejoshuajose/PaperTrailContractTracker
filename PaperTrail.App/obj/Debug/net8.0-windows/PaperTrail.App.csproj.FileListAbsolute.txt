@@ -1,0 +1,14 @@
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App.csproj.AssemblyReference.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Resources\Styles.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractEditView.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractListView.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditView.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\App.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractEditView.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractListView.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditView.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App_MarkupCompile.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App_MarkupCompile.lref

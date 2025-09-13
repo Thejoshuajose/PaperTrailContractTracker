@@ -1,0 +1,15 @@
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\bin\Debug\net8.0\PaperTrail.Core.deps.json
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\bin\Debug\net8.0\PaperTrail.Core.runtimeconfig.json
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\bin\Debug\net8.0\PaperTrail.Core.dll
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\bin\Debug\net8.0\PaperTrail.Core.pdb
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.csproj.AssemblyReference.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.AssemblyInfoInputs.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.AssemblyInfo.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.csproj.CoreCompileInputs.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.sourcelink.json
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.dll
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\refint\PaperTrail.Core.dll
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.pdb
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\PaperTrail.Core.genruntimeconfig.cache
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.Core\obj\Debug\net8.0\ref\PaperTrail.Core.dll

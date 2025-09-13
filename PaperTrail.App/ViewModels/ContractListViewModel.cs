@@ -5,6 +5,8 @@ using PaperTrail.Core.Models;
 using PaperTrail.Core.Repositories;
 using PaperTrail.Core.Services;
 using PaperTrail.App.Services;
+using System.Collections.ObjectModel;
+
 
 namespace PaperTrail.App.ViewModels;
 

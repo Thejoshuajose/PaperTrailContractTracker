@@ -1,6 +1,7 @@
 using PaperTrail.Core.Models;
 using PaperTrail.Core.Repositories;
 using PaperTrail.Core.Services;
+using System.IO;
 
 namespace PaperTrail.App.Services;
 
