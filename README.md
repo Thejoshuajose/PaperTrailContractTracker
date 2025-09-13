@@ -7,10 +7,6 @@ A local-first WPF application for tracking contracts, parties, attachments and r
 ```bash
 dotnet restore
 dotnet build
-# create initial migration
-# dotnet ef migrations add InitialCreate -p PaperTrail.Core -s PaperTrail.App
-# update database
-dotnet ef database update -p PaperTrail.Core -s PaperTrail.App
 ```
 
 Run the application:
@@ -19,18 +15,24 @@ Run the application:
 dotnet run --project PaperTrail.App
 ```
 
-Run tests:
+Run tests (if any):
 
 ```bash
 dotnet test
 ```
+
+## MongoDB
+
+The application stores all data in a MongoDB database named `FIWB-PaperTrail`. The connection string is
+read from the `MONGODB_URI` environment variable and falls back to `mongodb://localhost:27017` when not provided.
+Collections in the database are `Attachments`, `ImportedContracts`, `Parties`, `PreviousContracts` and `Reminders`.
 
 ## Features
 
 - Advanced filtering with search, multi-status and tag selection, renewal date ranges and saved views.
 - Attachment management with hash based de-duplication.
 - Reminder engine toasts due reminders only once.
-- JSON backup and restore of contracts, parties, attachments (metadata only) and reminders.
+- JSON backup and restore of imported and previous contracts, parties, attachments (metadata only) and reminders.
 
 ## Paths
 
