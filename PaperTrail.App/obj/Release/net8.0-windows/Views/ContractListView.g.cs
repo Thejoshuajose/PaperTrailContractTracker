@@ -9,6 +9,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using PaperTrail.App.Converters;
+using PaperTrail.Core.Models;
 using System;
 using System.Diagnostics;
 using System.Windows;
