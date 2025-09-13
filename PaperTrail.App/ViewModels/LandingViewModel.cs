@@ -29,6 +29,13 @@ public class LandingViewModel : ObservableObject
         var main = new MainWindow { DataContext = _mainViewModel };
         main.Show();
         window?.Close();
+
+        if (string.IsNullOrWhiteSpace(_settings.CompanyName))
+        {
+            var settingsVm = new SettingsViewModel(_settings);
+            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = main };
+            settingsWindow.ShowDialog();
+        }
     }
 
     private void OpenSettings()
