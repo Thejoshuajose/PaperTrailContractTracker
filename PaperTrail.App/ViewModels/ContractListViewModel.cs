@@ -4,6 +4,7 @@ using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
 using PaperTrail.Core.Repositories;
 using PaperTrail.App.Services;
+using PaperTrail.Core.Services;
 using System.Collections.ObjectModel;
 using System;
 using System.IO;
@@ -19,6 +20,7 @@ public partial class ContractListViewModel : ObservableObject
     private readonly ImportService _import;
     private readonly ExportService _export;
     private readonly DialogService _dialog;
+    private readonly ILicenseService _license;
 
     public ObservableCollection<Contract> Items { get; } = new();
 
@@ -33,12 +35,13 @@ public partial class ContractListViewModel : ObservableObject
     public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
 
-    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, DialogService dialog)
+    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, DialogService dialog, ILicenseService license)
     {
         _contracts = contracts;
         _import = import;
         _export = export;
         _dialog = dialog;
+        _license = license;
         RefreshCommand = new AsyncRelayCommand(LoadAsync);
         ImportCommand = new AsyncRelayCommand(ImportAsync);
         ExportCommand = new AsyncRelayCommand(ExportAsync);
@@ -57,10 +60,10 @@ public partial class ContractListViewModel : ObservableObject
     {
         var contract = new Contract { Id = Guid.NewGuid(), Title = "New Contract" };
         await _contracts.AddAsync(contract);
-        var vm = new ContractEditViewModel { Model = contract };
+        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
+        vm.LoadFromModel(contract);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
-        await _contracts.UpdateAsync(contract);
         await LoadAsync();
         SelectedContract = Items.FirstOrDefault(c => c.Id == contract.Id);
     }
