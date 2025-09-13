@@ -45,7 +45,6 @@ public partial class App : Application
                 services.AddSingleton<ContractEditViewModel>();
                 services.AddSingleton<PartyEditViewModel>();
                 services.AddSingleton<SettingsService>();
-                services.AddSingleton<LandingViewModel>();
                 services.AddSingleton<IJobFactory, QuartzJobFactory>();
                 services.AddSingleton(provider =>
                 {
@@ -67,14 +66,15 @@ public partial class App : Application
         await scheduler.Start();
 
         var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
-        var landingVm = scope.ServiceProvider.GetRequiredService<LandingViewModel>();
-        var landingWindow = new LandingWindow { DataContext = landingVm };
-        landingWindow.Show();
+        var mainVm = scope.ServiceProvider.GetRequiredService<MainViewModel>();
+        await mainVm.Contracts.LoadAsync();
+        var mainWindow = new MainWindow { DataContext = mainVm };
+        mainWindow.Show();
 
         if (string.IsNullOrWhiteSpace(settings.CompanyName))
         {
             var settingsVm = new SettingsViewModel(settings);
-            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = landingWindow };
+            var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = mainWindow };
             settingsWindow.ShowDialog();
         }
     }
