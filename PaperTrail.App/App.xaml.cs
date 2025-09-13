@@ -9,6 +9,8 @@ using PaperTrail.Core.Data;
 using PaperTrail.Core.Repositories;
 using PaperTrail.Core.Services;
 using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace PaperTrail.App;
 
