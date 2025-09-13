@@ -1,6 +1,5 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaperTrail.Core.Models;
 
 namespace PaperTrail.Core.Data;
@@ -30,11 +29,9 @@ public class AppDbContext : DbContext
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        var converter = new ValueConverter<DateOnly, DateTime>(
-            d => d.ToDateTime(TimeOnly.MinValue),
-            d => DateOnly.FromDateTime(d));
-
-        configurationBuilder.Properties<DateOnly>().HaveConversion(converter);
+        configurationBuilder
+            .Properties<DateOnly>()
+            .HaveConversion<DateOnlyConverter>();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
