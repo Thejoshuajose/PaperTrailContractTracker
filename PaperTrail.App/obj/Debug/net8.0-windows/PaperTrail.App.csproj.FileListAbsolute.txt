@@ -105,3 +105,5 @@ C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.A
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\NewContractWindow.g.cs
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditWindow.baml
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditWindow.g.cs
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\ReminderWindow.baml
+C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\ReminderWindow.g.cs
