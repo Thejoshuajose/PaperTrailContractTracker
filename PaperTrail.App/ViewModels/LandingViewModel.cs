@@ -59,6 +59,7 @@ public partial class LandingViewModel : ObservableObject
 
     public IAsyncRelayCommand OpenMainCommand { get; }
     public IRelayCommand OpenSettingsCommand { get; }
+    public IRelayCommand ShowHomeCommand { get; }
 
     public LandingViewModel(MainViewModel mainViewModel,
                             SettingsService settings,
@@ -77,6 +78,7 @@ public partial class LandingViewModel : ObservableObject
         _licenseService = licenseService;
         OpenMainCommand = new AsyncRelayCommand(OpenMainAsync);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
+        ShowHomeCommand = new RelayCommand(ShowHome);
     }
 
     private async Task OpenMainAsync()
@@ -90,6 +92,11 @@ public partial class LandingViewModel : ObservableObject
         var vm = new SettingsViewModel(_settings);
         var win = new SettingsWindow { DataContext = vm };
         win.ShowDialog();
+    }
+
+    private void ShowHome()
+    {
+        IsMainViewVisible = false;
     }
 
     public async Task LoadAsync()
