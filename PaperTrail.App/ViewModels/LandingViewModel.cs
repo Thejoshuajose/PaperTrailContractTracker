@@ -150,9 +150,11 @@ public partial class LandingViewModel : ObservableObject
         if (contract == null)
             return;
         contract.Status = ContractStatus.Archived;
+        contract.UpdatedUtc = DateTime.UtcNow;
         var repo = isPrevious ? (IContractRepository)_previousRepo : _importedRepo;
         await repo.UpdateAsync(contract);
         await LoadAsync();
+        await _mainViewModel.Contracts.LoadAsync();
     }
 
     public async Task OpenContractAsync(Contract? contract, bool isPrevious)
