@@ -97,7 +97,8 @@ public partial class ContractListViewModel : ObservableObject
     private async Task NewAsync()
     {
         var repo = App.Services.GetRequiredService<ICustomContractRepository>();
-        var selector = new NewContractWindow(repo);
+        var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
+        var selector = new NewContractWindow(repo, partyRepo);
         if (selector.ShowDialog() != true)
             return;
 
@@ -107,11 +108,12 @@ public partial class ContractListViewModel : ObservableObject
         {
             Id = Guid.NewGuid(),
             Title = title,
+            CounterpartyId = selector.SelectedParty?.Id,
+            Counterparty = selector.SelectedParty,
             CreatedUtc = now,
             UpdatedUtc = now
         };
         await _contracts.AddAsync(contract);
-        var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
         await vm.LoadFromModelAsync(contract);
         var win = new ContractWindow { DataContext = vm };
@@ -166,13 +168,18 @@ public partial class ContractListViewModel : ObservableObject
         if (contract == null)
             return;
 
+        if (contract.Status == ContractStatus.Terminated || contract.Status == ContractStatus.Archived)
+        {
+            MessageBox.Show("Closed contracts cannot be edited.", "Contract Closed", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         var model = await _contracts.GetByIdAsync(contract.Id);
         if (model == null)
             return;
 
         var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
-        vm.IsReadOnly = model.Status == ContractStatus.Archived;
         await vm.LoadFromModelAsync(model);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();

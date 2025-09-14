@@ -33,6 +33,7 @@ using System.Text.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
 using System;
@@ -56,13 +57,18 @@ public partial class NewContractWindow : Window
 
     private readonly ICollectionView _view;
     private readonly ICustomContractRepository _customRepo;
+    private readonly IPartyRepository _partyRepo;
 
     public string? SelectedTitle { get; private set; }
+    public Party? SelectedParty { get; private set; }
 
-    public NewContractWindow(ICustomContractRepository customRepo)
+    public NewContractWindow(ICustomContractRepository customRepo, IPartyRepository partyRepo)
     {
         InitializeComponent();
         _customRepo = customRepo;
+        _partyRepo = partyRepo;
+
+        LoadParties();
         var templates = new List<TemplateInfo>
         {
             new("📑 Business & Commercial Contracts", "Partnership Agreement"),
@@ -122,6 +128,16 @@ public partial class NewContractWindow : Window
         TemplateList.ItemsSource = _view;
     }
 
+    private void LoadParties()
+    {
+        try
+        {
+            var parties = _partyRepo.GetAllAsync().GetAwaiter().GetResult();
+            PartyCombo.ItemsSource = parties;
+        }
+        catch { }
+    }
+
     private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
         var text = SearchBox.Text;
@@ -134,6 +150,7 @@ public partial class NewContractWindow : Window
         if (TemplateList.SelectedItem is TemplateInfo info)
         {
             SelectedTitle = info.Title;
+            SelectedParty = PartyCombo.SelectedItem as Party;
             DialogResult = true;
         }
     }
@@ -145,6 +162,7 @@ public partial class NewContractWindow : Window
             var title = CustomTitleBox.Text;
             await _customRepo.AddAsync(new CustomContract { Id = Guid.NewGuid(), Title = title });
             SelectedTitle = title;
+            SelectedParty = PartyCombo.SelectedItem as Party;
             DialogResult = true;
         }
     }
@@ -152,5 +170,26 @@ public partial class NewContractWindow : Window
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
         DialogResult = false;
+    }
+
+    private void PartyCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        SelectedParty = PartyCombo.SelectedItem as Party;
+    }
+
+    private void AddParty_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = new PartyEditViewModel();
+        var win = new Views.PartyEditWindow { DataContext = vm };
+        if (win.ShowDialog() == true)
+        {
+            var party = vm.Model;
+            if (party.Id == Guid.Empty)
+                party.Id = Guid.NewGuid();
+            _partyRepo.AddAsync(party).GetAwaiter().GetResult();
+            var list = (_partyRepo.GetAllAsync().GetAwaiter().GetResult());
+            PartyCombo.ItemsSource = list;
+            PartyCombo.SelectedItem = party;
+        }
     }
 }
