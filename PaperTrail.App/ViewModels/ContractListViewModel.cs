@@ -154,4 +154,23 @@ public partial class ContractListViewModel : ObservableObject
         File.WriteAllBytes(file, data);
         MessageBox.Show("Export completed.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
     }
+
+    public async Task OpenContractAsync(Contract? contract)
+    {
+        if (contract == null)
+            return;
+
+        var model = await _contracts.GetByIdAsync(contract.Id);
+        if (model == null)
+            return;
+
+        var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
+        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
+        vm.LoadFromModel(model);
+        var win = new ContractWindow { DataContext = vm };
+        win.ShowDialog();
+        await LoadAsync();
+        var landing = App.Services.GetRequiredService<LandingViewModel>();
+        await landing.LoadAsync();
+    }
 }
