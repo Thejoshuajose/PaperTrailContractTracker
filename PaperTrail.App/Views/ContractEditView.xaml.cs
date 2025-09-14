@@ -30,4 +30,10 @@ public partial class ContractEditView : UserControl
                 await vm.DragDropAttachmentCommand.ExecuteAsync(data);
         }
     }
+
+    private async void PartySearch_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ViewModels.ContractEditViewModel vm)
+            await vm.EnsurePartySelectedAsync();
+    }
 }
