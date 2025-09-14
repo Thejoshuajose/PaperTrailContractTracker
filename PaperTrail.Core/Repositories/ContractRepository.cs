@@ -97,9 +97,15 @@ public class ContractRepository : IContractRepository
 
     public async Task AddRemindersAsync(Guid contractId, IEnumerable<Reminder> reminders, CancellationToken token = default)
     {
-        foreach (var r in reminders)
+        // Replace existing reminders for the contract to avoid duplicate key errors.
+        var reminderList = reminders.ToList();
+
+        await _context.Reminders.DeleteManyAsync(r => r.ContractId == contractId, token);
+
+        foreach (var r in reminderList)
             r.ContractId = contractId;
-        if (reminders.Any())
-            await _context.Reminders.InsertManyAsync(reminders, cancellationToken: token);
+
+        if (reminderList.Any())
+            await _context.Reminders.InsertManyAsync(reminderList, cancellationToken: token);
     }
 }
