@@ -155,6 +155,14 @@ build_metadata.AdditionalFiles.FullPath = C:\Users\joshu\source\repos\Thejoshuaj
 build_metadata.AdditionalFiles.Identity = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\Views\PartyEditWindow.xaml
 build_metadata.AdditionalFiles.XamlRuntime = Wpf
 
+[C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/Views/PartySelectionWindow.xaml]
+build_metadata.AdditionalFiles.SourceItemGroup = Page
+build_metadata.AdditionalFiles.Link = 
+build_metadata.AdditionalFiles.TargetPath = 
+build_metadata.AdditionalFiles.FullPath = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\Views\PartySelectionWindow.xaml
+build_metadata.AdditionalFiles.Identity = C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\Views\PartySelectionWindow.xaml
+build_metadata.AdditionalFiles.XamlRuntime = Wpf
+
 [C:/Users/joshu/source/repos/Thejoshuajose/PaperTrailContractTracker/PaperTrail.App/App.xaml]
 build_metadata.AdditionalFiles.SourceItemGroup = ApplicationDefinition
 build_metadata.AdditionalFiles.Link = 
