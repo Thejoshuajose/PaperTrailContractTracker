@@ -49,6 +49,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     private readonly DialogService _dialogService;
     private readonly ILicenseService _licenseService;
     private readonly IPartyRepository _partyRepository;
+    private readonly CalendarService _calendarService;
 
     private readonly Dictionary<string, List<string>> _errors = new();
     private DateTime _createdUtc;
@@ -170,13 +171,15 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         ImportService importService,
         DialogService dialogService,
         ILicenseService licenseService,
-        IPartyRepository partyRepository)
+        IPartyRepository partyRepository,
+        CalendarService calendarService)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _importService = importService ?? throw new ArgumentNullException(nameof(importService));
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _licenseService = licenseService ?? throw new ArgumentNullException(nameof(licenseService));
         _partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
+        _calendarService = calendarService ?? throw new ArgumentNullException(nameof(calendarService));
 
         isPro = _licenseService.IsPro;
 
@@ -456,6 +459,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
         // Regenerate reminders from current details
         var reminderList = ReminderFactory.Create(model).ToList();
+        reminderList.AddRange(Reminders.Where(r => r.Type == ReminderType.Custom));
         await _repository.AddRemindersAsync(model.Id, reminderList);
 
         Reminders.Clear();
@@ -668,12 +672,21 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     private void AddReminder()
     {
-        Reminders.Add(new Reminder
+        var win = new ReminderWindow();
+        if (win.ShowDialog() == true)
         {
-            Id = Guid.NewGuid(),
-            Type = ReminderType.Custom,
-            DueUtc = DateTime.UtcNow
-        });
+            var reminder = new Reminder
+            {
+                Id = Guid.NewGuid(),
+                Type = ReminderType.Custom,
+                DueUtc = win.SelectedDate.ToUniversalTime(),
+                CreatedUtc = DateTime.UtcNow,
+                Note = win.Note
+            };
+            Reminders.Add(reminder);
+            if (win.AddToCalendar)
+                _calendarService.AddToCalendar(reminder, Title);
+        }
     }
 
     // ------------ Window helpers ------------

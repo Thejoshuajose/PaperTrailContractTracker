@@ -17,6 +17,7 @@
             <MenuItem Header="_Home">
                 <MenuItem Header="_Home" Command="{Binding ShowHomeCommand}" />
                 <MenuItem Header="_Manage Contracts" Command="{Binding OpenMainCommand}" />
+                <MenuItem Header="_Closed Contracts" Command="{Binding OpenClosedContractsCommand}" />
             </MenuItem>
             
         </Menu>
@@ -50,6 +51,13 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                         <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" Width="*"/>
+                        <DataGridTemplateColumn Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Close" Command="{Binding DataContext.ClosePreviousContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -64,7 +72,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                         <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" Width="*"/>
-                        <DataGridTemplateColumn Width="200" MinWidth="150">
+                        <DataGridTemplateColumn Width="300" MinWidth="150">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -73,6 +81,9 @@
                                                 CommandParameter="{Binding}" Margin="0,0,6,0"/>
                                         <Button Content="Delete"
                                                 Command="{Binding DataContext.DeleteImportedContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}" Margin="0,0,6,0"/>
+                                        <Button Content="Close"
+                                                Command="{Binding DataContext.CloseImportedContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
