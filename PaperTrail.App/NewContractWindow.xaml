@@ -13,7 +13,7 @@
 
         <TextBox x:Name="SearchBox" Grid.Row="0" Margin="0,0,0,5" TextChanged="SearchBox_TextChanged" />
 
-        <ListBox x:Name="TemplateList" Grid.Row="1">
+        <ListBox x:Name="TemplateList" Grid.Row="1" DisplayMemberPath="Title">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
