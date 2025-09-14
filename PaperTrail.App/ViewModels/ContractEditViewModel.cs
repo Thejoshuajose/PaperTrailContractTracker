@@ -49,6 +49,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     private readonly ILicenseService _licenseService;
 
     private readonly Dictionary<string, List<string>> _errors = new();
+    private DateTime _createdUtc;
 
     public bool HasErrors => _errors.Any();
     public IEnumerable<string> ErrorList => _errors.SelectMany(kv => kv.Value);
@@ -240,6 +241,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
                 Reminders.Add(r);
 
         Notes = model.Notes;
+        _createdUtc = model.CreatedUtc;
 
         RecalculateComputedDates();
         HasChanges = false;
@@ -443,10 +445,14 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         if (model.Id == Guid.Empty)
         {
             model.Id = Guid.NewGuid();
+            model.CreatedUtc = DateTime.UtcNow;
+            model.UpdatedUtc = model.CreatedUtc;
             await _repository.AddAsync(model);
         }
         else
         {
+            model.CreatedUtc = _createdUtc;
+            model.UpdatedUtc = DateTime.UtcNow;
             await _repository.UpdateAsync(model);
         }
 

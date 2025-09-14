@@ -53,8 +53,11 @@ public class ContractRepository : IContractRepository
     public Task UpdateAsync(Contract contract, CancellationToken token = default)
         => _context.ImportedContracts.ReplaceOneAsync(c => c.Id == contract.Id, contract, cancellationToken: token);
 
-    public Task DeleteAsync(Guid id, CancellationToken token = default)
-        => _context.ImportedContracts.DeleteOneAsync(c => c.Id == id, token);
+    public async Task DeleteAsync(Guid id, CancellationToken token = default)
+    {
+        await _context.ImportedContracts.DeleteOneAsync(c => c.Id == id, token);
+        await _context.PreviousContracts.DeleteOneAsync(c => c.Id == id, token);
+    }
 
     public async Task AddAttachmentAsync(Guid contractId, Attachment attachment, CancellationToken token = default)
     {
