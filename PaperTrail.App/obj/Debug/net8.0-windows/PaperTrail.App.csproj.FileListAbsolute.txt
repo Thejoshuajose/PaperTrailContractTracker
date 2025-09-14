@@ -4,7 +4,6 @@ C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.A
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractListView.baml
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditView.baml
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\App.baml
-C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\MainWindow.g.cs
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractEditView.g.cs
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\ContractListView.g.cs
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\Views\PartyEditView.g.cs
@@ -73,7 +72,6 @@ C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.A
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\bin\Debug\net8.0-windows\PaperTrail.Core.dll
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\bin\Debug\net8.0-windows\PaperTrail.Core.pdb
-C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\MainWindow.baml
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App.g.resources
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App.d-bfalse.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\obj\Debug\net8.0-windows\PaperTrail.App.AssemblyInfoInputs.cache
