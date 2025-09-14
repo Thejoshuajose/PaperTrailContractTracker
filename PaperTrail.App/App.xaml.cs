@@ -46,6 +46,7 @@ public partial class App : Application
                 services.AddSingleton<ILicenseService, LicenseService>();
                 services.AddSingleton<CsvExporter>();
                 services.AddSingleton<HashService>();
+                services.AddSingleton<CalendarService>();
                 services.AddTransient<ReminderEngine>();
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<LandingViewModel>();

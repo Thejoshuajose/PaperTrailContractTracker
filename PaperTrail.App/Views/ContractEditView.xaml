@@ -200,6 +200,7 @@
                             <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" />
                             <DataGridTextColumn Header="Due (UTC)" Binding="{Binding DueUtc}" Width="2*" />
                             <DataGridTextColumn Header="Completed (UTC)" Binding="{Binding CompletedUtc}" Width="2*" />
+                            <DataGridTextColumn Header="Notes" Binding="{Binding Note}" Width="2*" />
                         </DataGrid.Columns>
                     </DataGrid>
 

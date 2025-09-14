@@ -48,6 +48,7 @@ public partial class ContractListViewModel : ObservableObject
     private readonly ExportService _export;
     private readonly DialogService _dialog;
     private readonly ILicenseService _license;
+    private readonly CalendarService _calendar;
 
     public ObservableCollection<Contract> Items { get; } = new();
 
@@ -57,18 +58,22 @@ public partial class ContractListViewModel : ObservableObject
     [ObservableProperty]
     private string? searchText;
 
+    [ObservableProperty]
+    private ContractStatus[]? statuses;
+
     public IAsyncRelayCommand NewCommand { get; }
     public IAsyncRelayCommand RefreshCommand { get; }
     public IAsyncRelayCommand ImportCommand { get; }
     public IAsyncRelayCommand ExportCommand { get; }
 
-    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, DialogService dialog, ILicenseService license)
+    public ContractListViewModel(IContractRepository contracts, ImportService import, ExportService export, DialogService dialog, ILicenseService license, CalendarService calendar)
     {
         _contracts = contracts;
         _import = import;
         _export = export;
         _dialog = dialog;
         _license = license;
+        _calendar = calendar;
         RefreshCommand = new AsyncRelayCommand(LoadAsync);
         ImportCommand = new AsyncRelayCommand(ImportAsync);
         ExportCommand = new AsyncRelayCommand(ExportAsync);
@@ -78,7 +83,7 @@ public partial class ContractListViewModel : ObservableObject
     public async Task LoadAsync()
     {
         Items.Clear();
-        var list = await _contracts.GetAllAsync(new FilterOptions { SearchText = SearchText });
+        var list = await _contracts.GetAllAsync(new FilterOptions { SearchText = SearchText, Statuses = Statuses });
         foreach (var c in list)
             Items.Add(c);
     }
@@ -101,7 +106,7 @@ public partial class ContractListViewModel : ObservableObject
         };
         await _contracts.AddAsync(contract);
         var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
-        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo);
+        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
         vm.LoadFromModel(contract);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
@@ -128,7 +133,7 @@ public partial class ContractListViewModel : ObservableObject
         if (model != null)
         {
             var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
-            var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo);
+            var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
             vm.LoadFromModel(model);
             var win = new ContractWindow { DataContext = vm };
             win.ShowDialog();
@@ -137,7 +142,7 @@ public partial class ContractListViewModel : ObservableObject
 
     private async Task ExportAsync()
     {
-        var data = await _export.ExportAsync(new FilterOptions { SearchText = SearchText });
+        var data = await _export.ExportAsync(new FilterOptions { SearchText = SearchText, Statuses = Statuses });
         if (data == null || data.Length == 0)
         {
             MessageBox.Show("No data to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
