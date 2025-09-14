@@ -168,10 +168,11 @@ public partial class ContractListViewModel : ObservableObject
         if (contract == null)
             return;
 
+        var isReadOnly = false;
         if (contract.Status == ContractStatus.Terminated || contract.Status == ContractStatus.Archived)
         {
             MessageBox.Show("Closed contracts cannot be edited.", "Contract Closed", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
+            isReadOnly = true;
         }
 
         var model = await _contracts.GetByIdAsync(contract.Id);
@@ -181,6 +182,7 @@ public partial class ContractListViewModel : ObservableObject
         var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
         await vm.LoadFromModelAsync(model);
+        vm.IsReadOnly = isReadOnly;
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();
