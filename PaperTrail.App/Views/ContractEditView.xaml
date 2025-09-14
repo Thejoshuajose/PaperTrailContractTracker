@@ -162,7 +162,7 @@
                     </Grid.RowDefinitions>
 
                     <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10"
-                            Background="#F8FAFC">
+                            Background="#F8FAFC" AllowDrop="True" Drop="AttachmentDrop" PreviewDragOver="AttachmentDragOver">
                         <TextBlock Text="Drag files here to attach" HorizontalAlignment="Center"/>
                     </Border>
 

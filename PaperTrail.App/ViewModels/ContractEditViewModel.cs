@@ -214,6 +214,10 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         Id = model.Id;
         Title = model.Title ?? string.Empty;
 
+        // Clear any previous search filter so the stored client is retained
+        partySearchText = string.Empty;
+        OnPropertyChanged(nameof(PartySearchText));
+
         await RefreshPartiesAsync(model.Counterparty);
         if (SelectedParty == null && Parties.Count > 0)
             SelectedParty = Parties[0];
@@ -549,7 +553,8 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         if (select != null && list.All(p => p.Id != select.Id))
             list.Add(select);
         if (!string.IsNullOrWhiteSpace(PartySearchText))
-            list = list.Where(p => p.Name.Contains(PartySearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+            list = list.Where(p => p.Name.Contains(PartySearchText, StringComparison.OrdinalIgnoreCase)
+                                   || (select != null && p.Id == select.Id)).ToList();
         Parties.Clear();
         foreach (var p in list)
             Parties.Add(p);
