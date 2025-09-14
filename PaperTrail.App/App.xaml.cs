@@ -31,9 +31,11 @@ public partial class App : Application
                 services.AddSingleton<IMongoClient>(_ =>
                     new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI") ?? "mongodb+srv://fiwbsolutions:lDQlujC1r9yV0uc4@fiwb-cluster.icshfk2.mongodb.net/"));
                 services.AddSingleton<MongoContext>();
-                services.AddScoped<IContractRepository, ContractRepository>();
-                services.AddScoped<PreviousContractRepository>();
-                services.AddScoped<IPartyRepository, PartyRepository>();
+                // Use singleton lifetime for repositories so they can be injected into
+                // singleton view models without lifetime conflicts
+                services.AddSingleton<IContractRepository, ContractRepository>();
+                services.AddSingleton<PreviousContractRepository>();
+                services.AddSingleton<IPartyRepository, PartyRepository>();
                 services.AddSingleton<INotificationService, NotificationService>();
                 services.AddSingleton<ImportService>();
                 services.AddSingleton<ExportService>();
