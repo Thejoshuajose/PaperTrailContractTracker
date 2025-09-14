@@ -300,6 +300,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     partial void OnValueAmountChanged(decimal? value) => OnPropertyChangedAndValidate(nameof(ValueAmount));
     partial void OnNotesChanged(string? value) => OnPropertyChangedAndValidate(nameof(Notes));
+    partial void OnIsReadOnlyChanged(bool value) => SaveCommand.NotifyCanExecuteChanged();
 
     public void RecalculateComputedDates()
     {
