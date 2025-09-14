@@ -42,6 +42,8 @@
                 <DataGrid ItemsSource="{Binding PreviousContracts}"
                           SelectedItem="{Binding SelectedPreviousContract}"
                           AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
                           MouseDoubleClick="PreviousContracts_DoubleClick">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
@@ -54,6 +56,8 @@
                 <DataGrid ItemsSource="{Binding ImportedContracts}"
                           SelectedItem="{Binding SelectedImportedContract}"
                           AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
                           MouseDoubleClick="ImportedContracts_DoubleClick">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
