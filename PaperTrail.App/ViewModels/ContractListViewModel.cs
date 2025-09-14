@@ -91,7 +91,14 @@ public partial class ContractListViewModel : ObservableObject
             return;
 
         var title = string.IsNullOrWhiteSpace(selector.SelectedTitle) ? "New Contract" : selector.SelectedTitle;
-        var contract = new Contract { Id = Guid.NewGuid(), Title = title };
+        var now = DateTime.UtcNow;
+        var contract = new Contract
+        {
+            Id = Guid.NewGuid(),
+            Title = title,
+            CreatedUtc = now,
+            UpdatedUtc = now
+        };
         await _contracts.AddAsync(contract);
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
         vm.LoadFromModel(contract);
