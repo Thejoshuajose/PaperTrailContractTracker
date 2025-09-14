@@ -491,8 +491,18 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         Reminders.Clear();
         foreach (var r in reminderList)
             Reminders.Add(r);
+        if (SelectedParty != null)
+        {
+            var existing = SelectedParty.Contracts
+                .FirstOrDefault(c => c.Id == model.Id);
+            if (existing != null)
+                SelectedParty.Contracts.Remove(existing);
+            SelectedParty.Contracts.Add(model);
+            await _partyRepository.UpdateAsync(SelectedParty);
+        }
 
         HasChanges = false;
+        CloseWindowForThisVM();
     }
 
     private Contract ToModel()
