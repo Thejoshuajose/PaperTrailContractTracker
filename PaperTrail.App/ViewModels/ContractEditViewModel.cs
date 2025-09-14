@@ -11,6 +11,7 @@ using Ookii.Dialogs.Wpf;
 using PaperTrail.App.Services;
 using PaperTrail.App.ViewModels;
 using PaperTrail.App;
+using PaperTrail.App.Views;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Data;
 using PaperTrail.Core.Models;
@@ -47,6 +48,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     private readonly ImportService _importService;
     private readonly DialogService _dialogService;
     private readonly ILicenseService _licenseService;
+    private readonly IPartyRepository _partyRepository;
 
     private readonly Dictionary<string, List<string>> _errors = new();
     private DateTime _createdUtc;
@@ -72,6 +74,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     [ObservableProperty] private string title = string.Empty;
     [ObservableProperty] private Party? selectedParty;
     [ObservableProperty] private ObservableCollection<Party> parties = new();
+    [ObservableProperty] private string partySearchText = string.Empty;
     [ObservableProperty] private ContractStatus selectedStatus = ContractStatus.Active;
 
     // Store your true date types in DateOnly? for the domain model
@@ -166,12 +169,14 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         IContractRepository repository,
         ImportService importService,
         DialogService dialogService,
-        ILicenseService licenseService)
+        ILicenseService licenseService,
+        IPartyRepository partyRepository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _importService = importService ?? throw new ArgumentNullException(nameof(importService));
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _licenseService = licenseService ?? throw new ArgumentNullException(nameof(licenseService));
+        _partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
 
         isPro = _licenseService.IsPro;
 
@@ -192,6 +197,8 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         tags.CollectionChanged += (_, __) => HasChanges = true;
         attachments.CollectionChanged += (_, __) => HasChanges = true;
         reminders.CollectionChanged += (_, __) => HasChanges = true;
+
+        _ = RefreshPartiesAsync();
     }
 
     // ------------ Loading ------------
@@ -203,17 +210,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
         Id = model.Id;
         Title = model.Title ?? string.Empty;
 
-        Parties.Clear();
-        if (model.Counterparty != null)
-        {
-            // Optionally: load all parties from repository if needed.
-            Parties.Add(model.Counterparty);
-            SelectedParty = model.Counterparty;
-        }
-        else
-        {
-            SelectedParty = null;
-        }
+        _ = RefreshPartiesAsync(model.Counterparty);
 
         SelectedStatus = model.Status;
 
@@ -263,6 +260,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     partial void OnTitleChanged(string value) => OnPropertyChangedAndValidate(nameof(Title));
     partial void OnSelectedPartyChanged(Party? value) => OnPropertyChangedAndValidate(nameof(SelectedParty));
+    partial void OnPartySearchTextChanged(string value) => _ = RefreshPartiesAsync();
     partial void OnSelectedStatusChanged(ContractStatus value) => OnPropertyChangedAndValidate(nameof(SelectedStatus));
 
     partial void OnEffectiveDateChanged(DateOnly? value)
@@ -537,11 +535,32 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     // ------------ Party ------------
 
-    private void AddParty()
+    private async Task RefreshPartiesAsync(Party? select = null)
     {
-        var p = new Party { Id = Guid.NewGuid(), Name = "New Party" };
-        Parties.Add(p);
-        SelectedParty = p;
+        var list = await _partyRepository.GetAllAsync();
+        if (select != null && list.All(p => p.Id != select.Id))
+            list.Add(select);
+        if (!string.IsNullOrWhiteSpace(PartySearchText))
+            list = list.Where(p => p.Name.Contains(PartySearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        Parties.Clear();
+        foreach (var p in list)
+            Parties.Add(p);
+        if (select != null)
+            SelectedParty = Parties.FirstOrDefault(p => p.Id == select.Id);
+    }
+
+    private async void AddParty()
+    {
+        var vm = new PartyEditViewModel();
+        var win = new PartyEditWindow { DataContext = vm };
+        if (win.ShowDialog() == true)
+        {
+            var party = vm.Model;
+            if (party.Id == Guid.Empty)
+                party.Id = Guid.NewGuid();
+            await _partyRepository.AddAsync(party);
+            await RefreshPartiesAsync(party);
+        }
     }
 
     // ------------ Attachments ------------

@@ -46,12 +46,13 @@
             <TabItem Header="Details">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
-                        <TextBlock Text="Party"/>
+                        <TextBlock Text="Client"/>
+                        <TextBox Text="{Binding PartySearchText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4"/>
                         <ComboBox ItemsSource="{Binding Parties}"
                                   SelectedItem="{Binding SelectedParty}"
-                                  IsEditable="True" />
+                                  DisplayMemberPath="Name" />
 
-                        <Button Content="Add Party"
+                        <Button Content="Add Client"
                                 Command="{Binding AddPartyCommand}"
                                 Width="120"
                                 Margin="0,6,0,0" />
