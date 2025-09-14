@@ -31,7 +31,11 @@ public partial class App : Application
             .ConfigureServices(services =>
             {
                 services.AddSingleton<IMongoClient>(_ =>
-                    new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI") ?? "mongodb+srv://fiwbsolutions:lDQlujC1r9yV0uc4@fiwb-cluster.icshfk2.mongodb.net/"));
+                {
+                    var uri = Environment.GetEnvironmentVariable("MONGODB_URI")
+                        ?? throw new InvalidOperationException("MONGODB_URI environment variable is not set");
+                    return new MongoClient(uri);
+                });
                 services.AddSingleton<MongoContext>();
                 // Use singleton lifetime for repositories so they can be injected into
                 // singleton view models without lifetime conflicts
