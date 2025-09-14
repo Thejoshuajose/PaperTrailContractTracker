@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PaperTrail.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec7a99ea76b8ae28c02f3d33edc17570827759c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12a4462c37c7e641711594ebd30df6a3f5be7d51")]
 [assembly: System.Reflection.AssemblyProductAttribute("PaperTrail.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PaperTrail.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
