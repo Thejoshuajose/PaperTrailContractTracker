@@ -24,6 +24,8 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        LoadEnvFromFile();
+
         var appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PaperTrailContractTracker");
         Directory.CreateDirectory(Path.Combine(appDir, "files"));
 
@@ -85,6 +87,30 @@ public partial class App : Application
             var settingsVm = new SettingsViewModel(settings);
             var settingsWindow = new SettingsWindow { DataContext = settingsVm, Owner = landingWindow };
             settingsWindow.ShowDialog();
+        }
+    }
+
+    private static void LoadEnvFromFile()
+    {
+        var dir = Directory.GetCurrentDirectory();
+        while (dir != null)
+        {
+            var envPath = Path.Combine(dir, ".env");
+            if (File.Exists(envPath))
+            {
+                foreach (var line in File.ReadAllLines(envPath))
+                {
+                    var trimmed = line.Trim();
+                    if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#"))
+                        continue;
+
+                    var parts = trimmed.Split('=', 2);
+                    if (parts.Length == 2)
+                        Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
+                }
+                break;
+            }
+            dir = Directory.GetParent(dir)?.FullName;
         }
     }
 }
