@@ -53,6 +53,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     private readonly Dictionary<string, List<string>> _errors = new();
     private DateTime _createdUtc;
+    private bool _suppressPartySearchRefresh;
 
     public bool HasErrors => _errors.Any();
     public IEnumerable<string> ErrorList => _errors.SelectMany(kv => kv.Value);
@@ -76,6 +77,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     [ObservableProperty] private Party? selectedParty;
     [ObservableProperty] private ObservableCollection<Party> parties = new();
     [ObservableProperty] private string partySearchText = string.Empty;
+    [ObservableProperty] private bool isPartySearchEnabled = true;
     [ObservableProperty] private ContractStatus selectedStatus = ContractStatus.Active;
 
     // Store your true date types in DateOnly? for the domain model
@@ -269,8 +271,24 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
     }
 
     partial void OnTitleChanged(string value) => OnPropertyChangedAndValidate(nameof(Title));
-    partial void OnSelectedPartyChanged(Party? value) => OnPropertyChangedAndValidate(nameof(SelectedParty));
-    partial void OnPartySearchTextChanged(string value) => _ = RefreshPartiesAsync();
+    partial void OnSelectedPartyChanged(Party? value)
+    {
+        _suppressPartySearchRefresh = true;
+        if (value != null)
+            PartySearchText = value.Name;
+        IsPartySearchEnabled = value == null;
+        _suppressPartySearchRefresh = false;
+        OnPropertyChangedAndValidate(nameof(SelectedParty));
+    }
+
+    partial void OnPartySearchTextChanged(string value)
+    {
+        if (_suppressPartySearchRefresh)
+            return;
+        if (SelectedParty != null)
+            SelectedParty = null;
+        _ = RefreshPartiesAsync();
+    }
     partial void OnSelectedStatusChanged(ContractStatus value) => OnPropertyChangedAndValidate(nameof(SelectedStatus));
 
     partial void OnEffectiveDateChanged(DateOnly? value)
@@ -560,6 +578,29 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
             Parties.Add(p);
         if (select != null)
             SelectedParty = Parties.FirstOrDefault(p => p.Id == select.Id);
+        else if (SelectedParty == null && Parties.Count == 1 &&
+                 PartySearchText.Equals(Parties[0].Name, StringComparison.OrdinalIgnoreCase))
+            SelectedParty = Parties[0];
+    }
+
+    public async Task EnsurePartySelectedAsync()
+    {
+        if (!IsPartySearchEnabled)
+            return;
+        await RefreshPartiesAsync();
+        if (SelectedParty == null)
+        {
+            if (Parties.Count == 1)
+            {
+                SelectedParty = Parties[0];
+            }
+            else if (Parties.Count > 1)
+            {
+                var win = new Views.PartySelectionWindow(Parties);
+                if (win.ShowDialog() == true && win.SelectedParty != null)
+                    SelectedParty = win.SelectedParty;
+            }
+        }
     }
 
     private async void AddParty()

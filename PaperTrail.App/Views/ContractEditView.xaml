@@ -51,7 +51,11 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
                         <TextBlock Text="Client"/>
-                        <TextBox Text="{Binding PartySearchText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4" IsReadOnly="{Binding IsReadOnly}"/>
+                        <TextBox Text="{Binding PartySearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,4"
+                                 IsReadOnly="{Binding IsReadOnly}"
+                                 IsEnabled="{Binding IsPartySearchEnabled}"
+                                 LostFocus="PartySearch_LostFocus"/>
                         <ComboBox ItemsSource="{Binding Parties}"
                                   SelectedItem="{Binding SelectedParty}"
                                   DisplayMemberPath="Name"

@@ -74,6 +74,9 @@ public partial class ContractListViewModel : ObservableObject
         _dialog = dialog;
         _license = license;
         _calendar = calendar;
+        Statuses = Enum.GetValues<ContractStatus>()
+            .Where(s => s != ContractStatus.Archived)
+            .ToArray();
         RefreshCommand = new AsyncRelayCommand(LoadAsync);
         ImportCommand = new AsyncRelayCommand(ImportAsync);
         ExportCommand = new AsyncRelayCommand(ExportAsync);
