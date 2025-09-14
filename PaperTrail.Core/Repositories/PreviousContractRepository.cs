@@ -122,15 +122,22 @@ public class PreviousContractRepository : IContractRepository
 
     public async Task AddRemindersAsync(Guid contractId, IEnumerable<Reminder> reminders, CancellationToken token = default)
     {
-        // Replace any existing reminders for the contract with the provided ones.
-        var reminderList = reminders.ToList();
+        // Replace any existing reminders for the contract and prevent duplicate IDs.
+        var reminderList = reminders
+            .Select(r =>
+            {
+                if (r.Id == Guid.Empty)
+                    r.Id = Guid.NewGuid();
+                r.ContractId = contractId;
+                return r;
+            })
+            .GroupBy(r => r.Id)
+            .Select(g => g.First())
+            .ToList();
 
         await _context.Reminders.DeleteManyAsync(r => r.ContractId == contractId, token);
 
-        foreach (var r in reminderList)
-            r.ContractId = contractId;
-
-        if (reminderList.Any())
+        if (reminderList.Count > 0)
             await _context.Reminders.InsertManyAsync(reminderList, cancellationToken: token);
     }
 }
