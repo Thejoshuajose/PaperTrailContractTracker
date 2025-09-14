@@ -1,7 +1,8 @@
 <Window x:Class="PaperTrail.App.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Height="300" Width="300">
+        Title="Settings" Height="300" Width="300"
+        Icon="Resources/IconsAndImages/PaperTrailIcon.ico">
     <StackPanel Margin="10">
         <TextBlock Text="Company Name" />
         <TextBox Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged}" />

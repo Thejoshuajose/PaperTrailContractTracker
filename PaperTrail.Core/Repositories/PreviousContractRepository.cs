@@ -3,6 +3,8 @@ using MongoDB.Driver;
 using PaperTrail.Core.Data;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
+using System;
+using System.Linq;
 
 namespace PaperTrail.Core.Repositories;
 
@@ -37,7 +39,11 @@ public class PreviousContractRepository : IContractRepository
         if (options.RenewalTo.HasValue)
             filter &= Builders<Contract>.Filter.Lte(c => c.RenewalDate, options.RenewalTo);
 
-        return await _context.PreviousContracts.Find(filter).ToListAsync(token);
+        return await _context.PreviousContracts
+            .Find(filter)
+            .SortByDescending(c => c.UpdatedUtc)
+            .Limit(30)
+            .ToListAsync(token);
     }
 
     public async Task<Contract?> GetByIdAsync(Guid id, CancellationToken token = default)
@@ -59,6 +65,25 @@ public class PreviousContractRepository : IContractRepository
 
     public Task DeleteAsync(Guid id, CancellationToken token = default)
         => _context.PreviousContracts.DeleteOneAsync(c => c.Id == id, token);
+
+    public async Task AddOrUpdateAsync(Contract contract, CancellationToken token = default)
+    {
+        contract.UpdatedUtc = DateTime.UtcNow;
+        await _context.PreviousContracts.ReplaceOneAsync(c => c.Id == contract.Id, contract,
+            new ReplaceOptions { IsUpsert = true }, token);
+
+        var excess = await _context.PreviousContracts.Find(_ => true)
+            .SortByDescending(c => c.UpdatedUtc)
+            .Skip(30)
+            .Project(c => c.Id)
+            .ToListAsync(token);
+
+        if (excess.Any())
+        {
+            var filter = Builders<Contract>.Filter.In(c => c.Id, excess);
+            await _context.PreviousContracts.DeleteManyAsync(filter, token);
+        }
+    }
 
     public async Task AddAttachmentAsync(Guid contractId, Attachment attachment, CancellationToken token = default)
     {
