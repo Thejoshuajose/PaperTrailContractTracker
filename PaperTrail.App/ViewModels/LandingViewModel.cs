@@ -169,7 +169,8 @@ public partial class LandingViewModel : ObservableObject
         await _previousRepo.AddOrUpdateAsync(model);
 
         var vm = new ContractEditViewModel(repo, _importService, _dialogService, _licenseService, _partyRepository, _calendarService);
-        vm.LoadFromModel(model);
+        vm.IsReadOnly = model.Status == ContractStatus.Archived;
+        await vm.LoadFromModelAsync(model);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();
@@ -236,7 +237,7 @@ public partial class LandingViewModel : ObservableObject
         }
 
         var vm = new ContractEditViewModel(_importedRepo, _importService, _dialogService, _licenseService, _partyRepository, _calendarService);
-        vm.LoadFromModel(copy);
+        await vm.LoadFromModelAsync(copy);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();
