@@ -21,7 +21,7 @@
         <conv:BooleanNegationConverter x:Key="BooleanNegationConverter" />
     </UserControl.Resources>
 
-    <Grid IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -31,16 +31,17 @@
         <!-- Command Bar -->
         <DockPanel Margin="6" LastChildFill="False">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Button Content="Save"   Command="{Binding SaveCommand}"   Margin="0,0,6,0"/>
+                <Button Content="Save"   Command="{Binding SaveCommand}"   Margin="0,0,6,0" IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
                 <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="0,0,6,0"/>
-                <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                <Button Content="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
             </StackPanel>
 
             <!-- Status selector -->
             <ComboBox Width="160"
                       DockPanel.Dock="Right"
                       ItemsSource="{Binding ContractStatusValues}"
-                      SelectedItem="{Binding SelectedStatus}"/>
+                      SelectedItem="{Binding SelectedStatus}"
+                      IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
         </DockPanel>
 
         <!-- Main Tabs -->
@@ -50,28 +51,31 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
                         <TextBlock Text="Client"/>
-                        <TextBox Text="{Binding PartySearchText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding PartySearchText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4" IsReadOnly="{Binding IsReadOnly}"/>
                         <ComboBox ItemsSource="{Binding Parties}"
                                   SelectedItem="{Binding SelectedParty}"
-                                  DisplayMemberPath="Name" />
+                                  DisplayMemberPath="Name"
+                                  IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}" />
 
                         <Button Content="Add Client"
                                 Command="{Binding AddPartyCommand}"
                                 Width="120"
-                                Margin="0,6,0,0" />
+                                Margin="0,6,0,0"
+                                IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}" />
 
                         <TextBlock Text="Title" Margin="0,12,0,0"/>
-                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsReadOnly}"/>
 
                         <TextBlock Text="Value" Margin="0,12,0,0"/>
-                        <TextBox Text="{Binding ValueAmount, StringFormat=C}"/>
+                        <TextBox Text="{Binding ValueAmount, StringFormat=C}" IsReadOnly="{Binding IsReadOnly}"/>
 
                         <TextBlock Text="Tags" Margin="0,12,0,0"/>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Width="180" Text="{Binding NewTagText}"/>
+                            <TextBox Width="180" Text="{Binding NewTagText}" IsReadOnly="{Binding IsReadOnly}"/>
                             <Button Content="Add"
                                     Command="{Binding AddTagCommand}"
-                                    Margin="6,0,0,0"/>
+                                    Margin="6,0,0,0"
+                                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
                         </StackPanel>
 
                         <ItemsControl ItemsSource="{Binding Tags}" Margin="0,6,0,0">
@@ -89,7 +93,8 @@
                                             <Button Content="✕"
                                                     Padding="2,0"
                                                     Command="{Binding DataContext.RemoveTagCommand, ElementName=Root}"
-                                                    CommandParameter="{Binding}"/>
+                                                    CommandParameter="{Binding}"
+                                                    IsEnabled="{Binding DataContext.IsReadOnly, ElementName=Root, Converter={StaticResource BooleanNegationConverter}}"/>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -119,21 +124,24 @@
 
                         <TextBlock Text="Effective" Grid.Row="0" VerticalAlignment="Center"/>
                         <DatePicker SelectedDate="{Binding EffectiveDateDateTime}"
-                                    Grid.Row="0" Grid.Column="1"/>
+                                    Grid.Row="0" Grid.Column="1"
+                                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
 
                         <TextBlock Text="Renewal" Grid.Row="1" VerticalAlignment="Center"/>
                         <DatePicker SelectedDate="{Binding RenewalDateDateTime}"
-                                    Grid.Row="1" Grid.Column="1"/>
+                                    Grid.Row="1" Grid.Column="1"
+                                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
 
                         <TextBlock Text="Renewal Term (months)" Grid.Row="2" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding RenewalTermMonths}" Grid.Row="2" Grid.Column="1"/>
+                        <TextBox Text="{Binding RenewalTermMonths}" Grid.Row="2" Grid.Column="1" IsReadOnly="{Binding IsReadOnly}"/>
 
                         <TextBlock Text="Notice Period (days)" Grid.Row="3" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding NoticePeriodDays}" Grid.Row="3" Grid.Column="1"/>
+                        <TextBox Text="{Binding NoticePeriodDays}" Grid.Row="3" Grid.Column="1" IsReadOnly="{Binding IsReadOnly}"/>
 
                         <TextBlock Text="Termination" Grid.Row="4" VerticalAlignment="Center"/>
                         <DatePicker SelectedDate="{Binding TerminationDateDateTime}"
-                                    Grid.Row="4" Grid.Column="1"/>
+                                    Grid.Row="4" Grid.Column="1"
+                                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
 
                         <TextBlock Text="Next Renewal" Grid.Row="5" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding ComputedNextRenewalText}" Grid.Row="5" Grid.Column="1"/>
@@ -175,7 +183,8 @@
                                                         CommandParameter="{Binding}" Margin="0,0,6,0"/>
                                                 <Button Content="Remove"
                                                         Command="{Binding DataContext.RemoveAttachmentCommand, ElementName=Root}"
-                                                        CommandParameter="{Binding}"/>
+                                                        CommandParameter="{Binding}"
+                                                        IsEnabled="{Binding DataContext.IsReadOnly, ElementName=Root, Converter={StaticResource BooleanNegationConverter}}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -185,7 +194,7 @@
                     </ListView>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                        <Button Content="Add Files..." Command="{Binding AddAttachmentCommand}"/>
+                        <Button Content="Add Files..." Command="{Binding AddAttachmentCommand}" IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -198,7 +207,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid ItemsSource="{Binding Reminders}" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding Reminders}" AutoGenerateColumns="False" IsReadOnly="{Binding IsReadOnly}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" />
                             <DataGridTextColumn Header="Due (UTC)" Binding="{Binding DueUtc}" Width="2*" />
@@ -208,7 +217,7 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                        <Button Content="Add Reminder" Command="{Binding AddReminderCommand}" Width="140"/>
+                        <Button Content="Add Reminder" Command="{Binding AddReminderCommand}" Width="140" IsEnabled="{Binding IsReadOnly, Converter={StaticResource BooleanNegationConverter}}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -218,7 +227,8 @@
                 <TextBox Margin="12"
                          Text="{Binding Notes}"
                          AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto"/>
+                         VerticalScrollBarVisibility="Auto"
+                         IsReadOnly="{Binding IsReadOnly}"/>
             </TabItem>
         </TabControl>
 
