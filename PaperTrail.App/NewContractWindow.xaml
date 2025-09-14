@@ -6,14 +6,20 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="SearchBox" Grid.Row="0" Margin="0,0,0,5" TextChanged="SearchBox_TextChanged" />
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+            <ComboBox x:Name="PartyCombo" Width="200" DisplayMemberPath="Name" SelectionChanged="PartyCombo_SelectionChanged" />
+            <Button Content="Add Client" Margin="10,0,0,0" Click="AddParty_Click" />
+        </StackPanel>
 
-        <ListBox x:Name="TemplateList" Grid.Row="1" DisplayMemberPath="Title">
+        <TextBox x:Name="SearchBox" Grid.Row="1" Margin="0,0,0,5" TextChanged="SearchBox_TextChanged" />
+
+        <ListBox x:Name="TemplateList" Grid.Row="2" DisplayMemberPath="Title">
             <ListBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -25,12 +31,12 @@
             </ListBox.GroupStyle>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button Content="Create Selected" Click="CreateSelected_Click" Margin="0,0,10,0" />
             <Button Content="Cancel" Click="Cancel_Click" />
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
             <TextBox x:Name="CustomTitleBox" Width="200" Margin="0,0,10,0" />
             <Button Content="Create Custom" Click="CreateCustom_Click" />
         </StackPanel>
