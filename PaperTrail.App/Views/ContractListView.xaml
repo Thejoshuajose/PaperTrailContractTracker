@@ -5,7 +5,7 @@
     <UserControl.Resources>
         <conv:DateTimeToLocalConverter x:Key="DateTimeToLocalConverter" />
     </UserControl.Resources>
-    <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedContract}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick">
+    <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedContract}" AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick" IsReadOnly="True" CanUserAddRows="False">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
             <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" />

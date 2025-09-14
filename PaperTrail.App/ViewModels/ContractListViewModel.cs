@@ -88,6 +88,12 @@ public partial class ContractListViewModel : ObservableObject
             Items.Add(c);
     }
 
+    partial void OnSearchTextChanged(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            RefreshCommand.Execute(null);
+    }
+
     private async Task NewAsync()
     {
         var repo = App.Services.GetRequiredService<ICustomContractRepository>();
@@ -107,7 +113,7 @@ public partial class ContractListViewModel : ObservableObject
         await _contracts.AddAsync(contract);
         var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
-        vm.LoadFromModel(contract);
+        await vm.LoadFromModelAsync(contract);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();
@@ -134,7 +140,7 @@ public partial class ContractListViewModel : ObservableObject
         {
             var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
             var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
-            vm.LoadFromModel(model);
+            await vm.LoadFromModelAsync(model);
             var win = new ContractWindow { DataContext = vm };
             win.ShowDialog();
         }
@@ -166,7 +172,8 @@ public partial class ContractListViewModel : ObservableObject
 
         var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
         var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo, _calendar);
-        vm.LoadFromModel(model);
+        vm.IsReadOnly = model.Status == ContractStatus.Archived;
+        await vm.LoadFromModelAsync(model);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();

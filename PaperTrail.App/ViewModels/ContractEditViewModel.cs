@@ -99,6 +99,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     [ObservableProperty] private bool hasChanges;
     [ObservableProperty] private bool isPro;
+    [ObservableProperty] private bool isReadOnly;
 
     private string? _computedNextRenewalText;
     public string? ComputedNextRenewalText
@@ -206,14 +207,16 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     // ------------ Loading ------------
 
-    public void LoadFromModel(Contract model)
+    public async Task LoadFromModelAsync(Contract model)
     {
         if (model is null) throw new ArgumentNullException(nameof(model));
 
         Id = model.Id;
         Title = model.Title ?? string.Empty;
 
-        _ = RefreshPartiesAsync(model.Counterparty);
+        await RefreshPartiesAsync(model.Counterparty);
+        if (SelectedParty == null && Parties.Count > 0)
+            SelectedParty = Parties[0];
 
         SelectedStatus = model.Status;
 
@@ -251,7 +254,7 @@ public partial class ContractEditViewModel : ObservableObject, INotifyDataErrorI
 
     // ------------ Validation and change hooks ------------
 
-    private bool CanSave() => !HasErrors;
+    private bool CanSave() => !HasErrors && !IsReadOnly;
 
     private void OnPropertyChangedAndValidate(string propertyName)
     {
