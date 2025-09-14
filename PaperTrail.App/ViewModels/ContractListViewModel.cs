@@ -85,7 +85,8 @@ public partial class ContractListViewModel : ObservableObject
 
     private async Task NewAsync()
     {
-        var selector = new NewContractWindow();
+        var repo = App.Services.GetRequiredService<ICustomContractRepository>();
+        var selector = new NewContractWindow(repo);
         if (selector.ShowDialog() != true)
             return;
 
