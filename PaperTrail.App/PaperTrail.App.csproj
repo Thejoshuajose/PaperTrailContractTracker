@@ -8,6 +8,11 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\IconsAndImages\PaperTrailBackground.png" />
+    <None Remove="Resources\IconsAndImages\PaperTrailIcon.ico" />
+    <None Remove="Resources\IconsAndImages\PaperTrailIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
@@ -18,5 +23,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PaperTrail.Core\PaperTrail.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\IconsAndImages\PaperTrailBackground.png" />
+    <Resource Include="Resources\IconsAndImages\PaperTrailIcon.ico" />
+    <Resource Include="Resources\IconsAndImages\PaperTrailIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 </Project>
