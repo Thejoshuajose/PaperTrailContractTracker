@@ -12,4 +12,5 @@ public class Reminder
     public DateTime DueUtc { get; set; }
     public DateTime? CompletedUtc { get; set; }
     public DateTime CreatedUtc { get; set; }
+    public string? Note { get; set; }
 }

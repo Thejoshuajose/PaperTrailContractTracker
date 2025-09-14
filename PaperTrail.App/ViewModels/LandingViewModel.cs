@@ -43,6 +43,7 @@ public partial class LandingViewModel : ObservableObject
     private readonly DialogService _dialogService;
     private readonly ILicenseService _licenseService;
     private readonly IPartyRepository _partyRepository;
+    private readonly CalendarService _calendarService;
 
     public ObservableCollection<Contract> PreviousContracts { get; } = new();
     public ObservableCollection<Contract> ImportedContracts { get; } = new();
@@ -63,6 +64,9 @@ public partial class LandingViewModel : ObservableObject
     public IRelayCommand ShowHomeCommand { get; }
     public IAsyncRelayCommand<Contract> DeleteImportedContractCommand { get; }
     public IAsyncRelayCommand<Contract> DuplicateImportedContractCommand { get; }
+    public IAsyncRelayCommand OpenClosedContractsCommand { get; }
+    public IAsyncRelayCommand<Contract> ClosePreviousContractCommand { get; }
+    public IAsyncRelayCommand<Contract> CloseImportedContractCommand { get; }
 
     public LandingViewModel(MainViewModel mainViewModel,
                             SettingsService settings,
@@ -71,7 +75,8 @@ public partial class LandingViewModel : ObservableObject
                             ImportService importService,
                             DialogService dialogService,
                             ILicenseService licenseService,
-                            IPartyRepository partyRepository)
+                            IPartyRepository partyRepository,
+                            CalendarService calendarService)
     {
         _mainViewModel = mainViewModel;
         _settings = settings;
@@ -81,15 +86,29 @@ public partial class LandingViewModel : ObservableObject
         _dialogService = dialogService;
         _licenseService = licenseService;
         _partyRepository = partyRepository;
+        _calendarService = calendarService;
         OpenMainCommand = new AsyncRelayCommand(OpenMainAsync);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
         ShowHomeCommand = new RelayCommand(ShowHome);
         DeleteImportedContractCommand = new AsyncRelayCommand<Contract>(DeleteImportedContractAsync);
         DuplicateImportedContractCommand = new AsyncRelayCommand<Contract>(DuplicateImportedContractAsync);
+        OpenClosedContractsCommand = new AsyncRelayCommand(OpenClosedContractsAsync);
+        ClosePreviousContractCommand = new AsyncRelayCommand<Contract>(c => CloseContractAsync(c, true));
+        CloseImportedContractCommand = new AsyncRelayCommand<Contract>(c => CloseContractAsync(c, false));
     }
 
     private async Task OpenMainAsync()
     {
+        _mainViewModel.Contracts.Statuses = Enum.GetValues<ContractStatus>()
+            .Where(s => s != ContractStatus.Archived)
+            .ToArray();
+        await _mainViewModel.Contracts.LoadAsync();
+        IsMainViewVisible = true;
+    }
+
+    private async Task OpenClosedContractsAsync()
+    {
+        _mainViewModel.Contracts.Statuses = new[] { ContractStatus.Archived };
         await _mainViewModel.Contracts.LoadAsync();
         IsMainViewVisible = true;
     }
@@ -110,14 +129,30 @@ public partial class LandingViewModel : ObservableObject
     public async Task LoadAsync()
     {
         PreviousContracts.Clear();
-        var prev = await _previousRepo.GetAllAsync(new FilterOptions());
+        var filter = new FilterOptions
+        {
+            Statuses = Enum.GetValues<ContractStatus>()
+                .Where(s => s != ContractStatus.Archived)
+                .ToArray()
+        };
+        var prev = await _previousRepo.GetAllAsync(filter);
         foreach (var c in prev)
             PreviousContracts.Add(c);
 
         ImportedContracts.Clear();
-        var imp = await _importedRepo.GetAllAsync(new FilterOptions());
+        var imp = await _importedRepo.GetAllAsync(filter);
         foreach (var c in imp)
             ImportedContracts.Add(c);
+    }
+
+    private async Task CloseContractAsync(Contract? contract, bool isPrevious)
+    {
+        if (contract == null)
+            return;
+        contract.Status = ContractStatus.Archived;
+        var repo = isPrevious ? (IContractRepository)_previousRepo : _importedRepo;
+        await repo.UpdateAsync(contract);
+        await LoadAsync();
     }
 
     public async Task OpenContractAsync(Contract? contract, bool isPrevious)
@@ -131,7 +166,7 @@ public partial class LandingViewModel : ObservableObject
 
         await _previousRepo.AddOrUpdateAsync(model);
 
-        var vm = new ContractEditViewModel(repo, _importService, _dialogService, _licenseService, _partyRepository);
+        var vm = new ContractEditViewModel(repo, _importService, _dialogService, _licenseService, _partyRepository, _calendarService);
         vm.LoadFromModel(model);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
@@ -198,7 +233,7 @@ public partial class LandingViewModel : ObservableObject
             }
         }
 
-        var vm = new ContractEditViewModel(_importedRepo, _importService, _dialogService, _licenseService, _partyRepository);
+        var vm = new ContractEditViewModel(_importedRepo, _importService, _dialogService, _licenseService, _partyRepository, _calendarService);
         vm.LoadFromModel(copy);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();

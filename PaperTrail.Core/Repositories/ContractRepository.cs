@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using PaperTrail.Core.Data;
 using PaperTrail.Core.DTO;
 using PaperTrail.Core.Models;
+using System.Linq;
 
 namespace PaperTrail.Core.Repositories;
 
@@ -33,7 +34,26 @@ public class ContractRepository : IContractRepository
         if (options.RenewalTo.HasValue)
             filter &= Builders<Contract>.Filter.Lte(c => c.RenewalDate, options.RenewalTo);
 
-        return await _context.ImportedContracts.Find(filter).ToListAsync(token);
+        var list = await _context.ImportedContracts.Find(filter).ToListAsync(token);
+
+        var partyIds = list
+            .Where(c => c.CounterpartyId.HasValue)
+            .Select(c => c.CounterpartyId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (partyIds.Count > 0)
+        {
+            var parties = await _context.Clients
+                .Find(p => partyIds.Contains(p.Id))
+                .ToListAsync(token);
+            var dict = parties.ToDictionary(p => p.Id);
+            foreach (var c in list)
+                if (c.CounterpartyId.HasValue && dict.TryGetValue(c.CounterpartyId.Value, out var party))
+                    c.Counterparty = party;
+        }
+
+        return list;
     }
 
     public async Task<Contract?> GetByIdAsync(Guid id, CancellationToken token = default)
@@ -43,6 +63,11 @@ public class ContractRepository : IContractRepository
         {
             contract.Attachments = await _context.Attachments.Find(a => a.ContractId == id).ToListAsync(token);
             contract.Reminders = await _context.Reminders.Find(r => r.ContractId == id).ToListAsync(token);
+
+            if (contract.CounterpartyId.HasValue)
+                contract.Counterparty = await _context.Clients
+                    .Find(p => p.Id == contract.CounterpartyId.Value)
+                    .FirstOrDefaultAsync(token);
         }
         return contract;
     }
