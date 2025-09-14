@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace PaperTrail.Core.Models;
 
+[BsonIgnoreExtraElements]
 public class Party
 {
     [Key]
@@ -11,5 +13,6 @@ public class Party
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public string? Address { get; set; }
+    [BsonIgnore]
     public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 }

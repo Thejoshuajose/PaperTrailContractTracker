@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace PaperTrail.Core.Models;
 
+[BsonIgnoreExtraElements]
 public class Contract
 {
     [Key]
@@ -9,6 +11,7 @@ public class Contract
     [Required]
     public string Title { get; set; } = string.Empty;
     public Guid? CounterpartyId { get; set; }
+    [BsonIgnore]
     public Party? Counterparty { get; set; }
     public ContractStatus Status { get; set; } = ContractStatus.Active;
     public DateOnly? EffectiveDate { get; set; }
