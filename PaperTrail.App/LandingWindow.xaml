@@ -64,7 +64,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                         <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" Width="*"/>
-                        <DataGridTemplateColumn Width="*" MinWidth="75">
+                        <DataGridTemplateColumn Width="100" MinWidth="75">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="Delete"
