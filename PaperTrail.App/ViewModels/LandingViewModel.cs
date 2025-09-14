@@ -136,6 +136,10 @@ public partial class LandingViewModel : ObservableObject
     {
         if (contract == null)
             return;
+        var created = contract.CreatedUtc.ToLocalTime();
+        var message = $"Are you sure you want to delete \"{contract.Title}\" created on {created:yyyy-MM-dd}?";
+        if (MessageBox.Show(message, "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            return;
         await _importedRepo.DeleteAsync(contract.Id);
         await LoadAsync();
     }
