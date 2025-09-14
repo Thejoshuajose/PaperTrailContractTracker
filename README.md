@@ -25,7 +25,8 @@ dotnet test
 
 The application stores all data in a MongoDB database named `FIWB-PaperTrail`. The connection string is
 read from the `MONGODB_URI` environment variable. You can set this variable in your shell or by creating a
-`.env` file. See `.env.example` for the expected format.
+`.env` file in the project directory. The application will automatically load this file at startup.
+See `.env.example` for the expected format.
 Collections in the database are `Attachments`, `ImportedContracts`, `Parties`, `PreviousContracts` and `Reminders`.
 
 ## Features
