@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PaperTrail.Core.Models;
 
+[BsonIgnoreExtraElements]
 public class Party
 {
     [Key]
