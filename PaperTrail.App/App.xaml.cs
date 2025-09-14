@@ -18,6 +18,8 @@ public partial class App : Application
 {
     private IHost? _host;
 
+    public static IServiceProvider Services => ((App)Current)._host!.Services;
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -36,6 +38,7 @@ public partial class App : Application
                 services.AddSingleton<IContractRepository, ContractRepository>();
                 services.AddSingleton<PreviousContractRepository>();
                 services.AddSingleton<IPartyRepository, PartyRepository>();
+                services.AddSingleton<ICustomContractRepository, CustomContractRepository>();
                 services.AddSingleton<INotificationService, NotificationService>();
                 services.AddSingleton<ImportService>();
                 services.AddSingleton<ExportService>();

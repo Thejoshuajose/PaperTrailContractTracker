@@ -60,6 +60,7 @@ public partial class LandingViewModel : ObservableObject
     public IAsyncRelayCommand OpenMainCommand { get; }
     public IRelayCommand OpenSettingsCommand { get; }
     public IRelayCommand ShowHomeCommand { get; }
+    public IAsyncRelayCommand<Contract> DeleteImportedContractCommand { get; }
 
     public LandingViewModel(MainViewModel mainViewModel,
                             SettingsService settings,
@@ -79,6 +80,7 @@ public partial class LandingViewModel : ObservableObject
         OpenMainCommand = new AsyncRelayCommand(OpenMainAsync);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
         ShowHomeCommand = new RelayCommand(ShowHome);
+        DeleteImportedContractCommand = new AsyncRelayCommand<Contract>(DeleteImportedContractAsync);
     }
 
     private async Task OpenMainAsync()
@@ -127,6 +129,14 @@ public partial class LandingViewModel : ObservableObject
         vm.LoadFromModel(model);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
+        await LoadAsync();
+    }
+
+    private async Task DeleteImportedContractAsync(Contract? contract)
+    {
+        if (contract == null)
+            return;
+        await _importedRepo.DeleteAsync(contract.Id);
         await LoadAsync();
     }
 }

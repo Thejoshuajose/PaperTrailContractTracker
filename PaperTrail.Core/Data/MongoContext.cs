@@ -16,6 +16,7 @@ public class MongoContext
     public IMongoCollection<Models.Party> Parties => Database.GetCollection<Models.Party>("Parties");
     public IMongoCollection<Models.Contract> PreviousContracts => Database.GetCollection<Models.Contract>("PreviousContracts");
     public IMongoCollection<Models.Reminder> Reminders => Database.GetCollection<Models.Reminder>("Reminders");
+    public IMongoCollection<Models.CustomContract> CustomContracts => Database.GetCollection<Models.CustomContract>("CustomContracts");
 
     public MongoContext(IMongoClient client)
     {

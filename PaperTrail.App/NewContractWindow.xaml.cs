@@ -55,12 +55,14 @@ public partial class NewContractWindow : Window
     }
 
     private readonly ICollectionView _view;
+    private readonly ICustomContractRepository _customRepo;
 
     public string? SelectedTitle { get; private set; }
 
-    public NewContractWindow()
+    public NewContractWindow(ICustomContractRepository customRepo)
     {
         InitializeComponent();
+        _customRepo = customRepo;
         var templates = new List<TemplateInfo>
         {
             new("📑 Business & Commercial Contracts", "Partnership Agreement"),
@@ -107,6 +109,14 @@ public partial class NewContractWindow : Window
             new("📦 Miscellaneous / General Use", "Waiver & Indemnity Agreement")
         };
 
+        try
+        {
+            var customs = _customRepo.GetAllAsync().GetAwaiter().GetResult();
+            foreach (var c in customs)
+                templates.Add(new TemplateInfo("📝 Custom", c.Title));
+        }
+        catch { }
+
         _view = CollectionViewSource.GetDefaultView(templates);
         _view.GroupDescriptions.Add(new PropertyGroupDescription(nameof(TemplateInfo.Category)));
         TemplateList.ItemsSource = _view;
@@ -128,11 +138,13 @@ public partial class NewContractWindow : Window
         }
     }
 
-    private void CreateCustom_Click(object sender, RoutedEventArgs e)
+    private async void CreateCustom_Click(object sender, RoutedEventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(CustomTitleBox.Text))
         {
-            SelectedTitle = CustomTitleBox.Text;
+            var title = CustomTitleBox.Text;
+            await _customRepo.AddAsync(new CustomContract { Id = Guid.NewGuid(), Title = title });
+            SelectedTitle = title;
             DialogResult = true;
         }
     }
