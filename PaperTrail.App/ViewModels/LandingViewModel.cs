@@ -226,11 +226,25 @@ public partial class LandingViewModel : ObservableObject
                     ContractId = copy.Id,
                     Contract = copy,
                     FileName = att.FileName,
-                    FilePath = att.FilePath,
                     Hash = att.Hash,
                     CreatedUtc = att.CreatedUtc,
                     MissingFile = att.MissingFile
                 };
+
+                if (!string.IsNullOrEmpty(att.FilePath) && File.Exists(att.FilePath))
+                {
+                    var baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PaperTrailContractTracker", "files");
+                    Directory.CreateDirectory(baseDir);
+                    var destName = $"{Guid.NewGuid()}_{Path.GetFileName(att.FilePath)}";
+                    var destPath = Path.Combine(baseDir, destName);
+                    File.Copy(att.FilePath, destPath, true);
+                    newAtt.FilePath = destPath;
+                }
+                else
+                {
+                    newAtt.FilePath = att.FilePath;
+                }
+
                 await _importedRepo.AddAttachmentAsync(copy.Id, newAtt);
                 copy.Attachments.Add(newAtt);
             }
