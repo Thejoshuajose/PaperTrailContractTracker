@@ -100,12 +100,15 @@ public partial class ContractListViewModel : ObservableObject
             UpdatedUtc = now
         };
         await _contracts.AddAsync(contract);
-        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
+        var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
+        var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo);
         vm.LoadFromModel(contract);
         var win = new ContractWindow { DataContext = vm };
         win.ShowDialog();
         await LoadAsync();
         SelectedContract = Items.FirstOrDefault(c => c.Id == contract.Id);
+        var landing = App.Services.GetRequiredService<LandingViewModel>();
+        await landing.LoadAsync();
     }
 
     private async Task ImportAsync()
@@ -124,7 +127,8 @@ public partial class ContractListViewModel : ObservableObject
         var model = await _contracts.GetByIdAsync(SelectedContract.Id);
         if (model != null)
         {
-            var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license);
+            var partyRepo = App.Services.GetRequiredService<IPartyRepository>();
+            var vm = new ContractEditViewModel(_contracts, _import, _dialog, _license, partyRepo);
             vm.LoadFromModel(model);
             var win = new ContractWindow { DataContext = vm };
             win.ShowDialog();

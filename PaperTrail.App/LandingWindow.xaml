@@ -64,13 +64,17 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                         <DataGridTextColumn Header="Counterparty" Binding="{Binding Counterparty.Name}" Width="*"/>
-                        <DataGridTemplateColumn Width="100" MinWidth="75">
+                        <DataGridTemplateColumn Width="200" MinWidth="150">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Delete"
-                                            Command="{Binding DataContext.DeleteImportedContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                            CommandParameter="{Binding}"
-                                            HorizontalAlignment="Stretch" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Duplicate &amp; Change"
+                                                Command="{Binding DataContext.DuplicateImportedContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}" Margin="0,0,6,0"/>
+                                        <Button Content="Delete"
+                                                Command="{Binding DataContext.DeleteImportedContractCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

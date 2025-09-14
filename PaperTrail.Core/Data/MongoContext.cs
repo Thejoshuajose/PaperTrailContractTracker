@@ -13,6 +13,7 @@ public class MongoContext
 
     public IMongoCollection<Models.Attachment> Attachments => Database.GetCollection<Models.Attachment>("Attachments");
     public IMongoCollection<Models.Contract> ImportedContracts => Database.GetCollection<Models.Contract>("ImportedContracts");
+    public IMongoCollection<Models.Party> Clients => Database.GetCollection<Models.Party>("Clients");
     public IMongoCollection<Models.Party> Parties => Database.GetCollection<Models.Party>("Parties");
     public IMongoCollection<Models.Contract> PreviousContracts => Database.GetCollection<Models.Contract>("PreviousContracts");
     public IMongoCollection<Models.Reminder> Reminders => Database.GetCollection<Models.Reminder>("Reminders");
