@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:PaperTrail.App.Views"
         Title="PaperTrail Contract Tracker" Height="500" Width="800"
-        Icon="Resources/IconsAndImages/PaperTrailIcon.ico">
+        Icon="pack://application:,,,/Resources/IconsAndImages/PaperTrailIcon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -71,7 +71,7 @@
 
         <Grid x:Name="MainGrid" Grid.Row="1" DataContext="{Binding Main}">
             <Grid.Background>
-                <ImageBrush ImageSource="Resources/IconsAndImages/PaperTrailBackground.png" Stretch="UniformToFill" />
+                <ImageBrush ImageSource="pack://application:,,,/Resources/IconsAndImages/PaperTrailBackground.png" Stretch="UniformToFill" />
             </Grid.Background>
             <Grid.Style>
                 <Style TargetType="Grid">
