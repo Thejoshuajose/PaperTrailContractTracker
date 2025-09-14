@@ -10,13 +10,14 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Settings" Command="{Binding OpenSettingsCommand}" />
+            </MenuItem>
             <MenuItem Header="_Home">
                 <MenuItem Header="_Home" Command="{Binding ShowHomeCommand}" />
                 <MenuItem Header="_Manage Contracts" Command="{Binding OpenMainCommand}" />
             </MenuItem>
-            <MenuItem Header="_File">
-                <MenuItem Header="_Settings" Command="{Binding OpenSettingsCommand}" />
-            </MenuItem>
+            
         </Menu>
 
         <Grid x:Name="LandingGrid" Grid.Row="1" Margin="10">
