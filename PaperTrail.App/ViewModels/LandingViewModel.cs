@@ -121,6 +121,8 @@ public partial class LandingViewModel : ObservableObject
         var model = await repo.GetByIdAsync(contract.Id);
         if (model == null) return;
 
+        await _previousRepo.AddOrUpdateAsync(model);
+
         var vm = new ContractEditViewModel(repo, _importService, _dialogService, _licenseService);
         vm.LoadFromModel(model);
         var win = new ContractWindow { DataContext = vm };
