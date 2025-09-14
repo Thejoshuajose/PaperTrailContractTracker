@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER;HAS_UNO;UNO_HAS_FRAMEWORKELEMENT_MEASUREOVERRIDE;UNO_HAS_NO_IDEPENDENCYOBJECT
 C:\Users\joshu\source\repos\Thejoshuajose\PaperTrailContractTracker\PaperTrail.App\App.xaml
-8-714612616
+8128137504
 
-211562198510
+221714163560
 265-367980821
-ContractWindow.xaml;LandingWindow.xaml;NewContractWindow.xaml;Resources\Styles.xaml;SettingsWindow.xaml;Views\ContractEditView.xaml;Views\ContractListView.xaml;Views\PartyEditView.xaml;
+ContractWindow.xaml;LandingWindow.xaml;NewContractWindow.xaml;Resources\Styles.xaml;SettingsWindow.xaml;Views\ContractEditView.xaml;Views\ContractListView.xaml;Views\PartyEditWindow.xaml;
 
 False
 
